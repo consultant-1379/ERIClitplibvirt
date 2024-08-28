@@ -1,0 +1,10 @@
+runLitpScript common_setup.atlib
+runLitpScript basic_deployment.atlib
+
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+# Duplicated image
+litp create -t vm-image -p /software/images/image2 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+assertError --err_message 'Create plan failed: The "name" property of the "vm-image" is not unique. The "name" property is identical in the following items: "/software/images/image1"' create_plan

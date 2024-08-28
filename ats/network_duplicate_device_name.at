@@ -1,0 +1,14 @@
+runLitpScript common_setup.atlib
+runLitpScript basic_deployment.atlib
+
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs1 -o name="httpd" active=2 standby=0 node_list="node_1,node_2"
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M
+
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth0 host_device=eth0 ipaddresses="10.10.10.10,10.10.10.11"
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/net2 -o network_name=mgmt device_name=eth0 host_device=eth0 ipaddresses="10.10.10.12,10.10.10.13"
+
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/services/cs1/applications/fmmed
+
+assertError --err_message 'Create plan failed: The "device_name" property of the "vm-network-interface" is not unique. The "device_name" property is identical in the following items: "/deployments/test/clusters/cluster1/services/cs1/applications/fmmed/vm_network_interfaces/net2"' create_plan

@@ -1,0 +1,15 @@
+runLitpScript ../common_setup.atlib
+runLitpScript ../sample_libvirt_deployment/bad_deployment.sh
+
+assertError create_plan
+
+litp create -t eth -p /ms/network_interfaces/if0 -o device_name=eth0 macaddress='DE:AD:BE:EF:45:50' bridge=br0
+litp create -t bridge -p /ms/network_interfaces/br0 -o device_name=br0 network_name=nodes ipaddress='10.10.10.103' forwarding_delay=4 stp=false
+
+litp remove -p /infrastructure/networking/networks/n0
+litp create -t network -p /infrastructure/networking/networks/n0 -o name=test_236 subnet='10.0.0.0/24'
+litp create -t network -p /infrastructure/networking/networks/n1 -o name=nodes subnet='10.10.10.0/24'
+
+litp create -t eth -p /ms/network_interfaces/if1 -o device_name=eth1 macaddress='DE:AD:BE:EF:45:51' network_name=nodes ipaddress='10.10.10.101'
+
+litp create_plan

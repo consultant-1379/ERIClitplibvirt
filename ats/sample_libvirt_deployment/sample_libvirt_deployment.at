@@ -1,0 +1,22 @@
+runLitpScript ../common_setup.atlib
+
+runLitpScript sample_libvirt_deployment.sh
+
+litp run_plan
+
+# Check Puppet manifest are correct
+assertDirectoryContents expected_output /opt/ericsson/nms/litp/etc/puppet/manifests/plugins/
+
+# Check libvirt items
+assertProperty /infrastructure/system_providers/libvirt1 -o name=libvirt1
+assertProperty /infrastructure/system_providers/libvirt1 -o bridge=br0
+assertProperty /infrastructure/system_providers/libvirt1/systems/vm1 -o system_name=VM1
+assertProperty /infrastructure/system_providers/libvirt1/systems/vm2 -o system_name=VM2
+
+# Check IP adddresses
+assertProperty /deployments/single_blade/clusters/cluster1/nodes/node1/network_interfaces/if0 -o ipaddress='10.10.10.107'
+assertProperty /deployments/single_blade/clusters/cluster1/nodes/node2/network_interfaces/if0 -o ipaddress='10.10.10.108'
+
+# Check Node properties
+assertProperty /deployments/single_blade/clusters/cluster1/nodes/node1 -o hostname='node1'
+assertProperty /deployments/single_blade/clusters/cluster1/nodes/node2 -o hostname='node2'

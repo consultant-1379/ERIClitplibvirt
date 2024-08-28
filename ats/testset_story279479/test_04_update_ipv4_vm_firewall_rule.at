@@ -1,0 +1,21 @@
+runLitpScript ../common_setup.atlib
+runLitpScript ../basic_deployment.atlib
+
+add-plugins ../yum_query_mock
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.10.51"
+litp create -t vm-firewall-rule -p /software/services/fmmed1/vm_firewall_rules/test1 -o name="01 test_04" provider=iptables action=accept
+
+litp create_plan
+assertConfigTask mn1 libvirt::write_file mn1userdatafmmed1 /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1 content='\#cloud-config\nbootcmd:\n- - cloud-init-per\n  - instance\n  - hostname\n  - sh\n  - -c\n  - hostnamectl set-hostname node-1-fmmed1\n- if [ -f /sbin/iptables ]; then iptables_dir="/sbin"; elif [ -f /usr/sbin/iptables\n  ]; then iptables_dir="/usr/sbin"; fi\n- \$iptables_dir/iptables -A INPUT -p tcp -m tcp --dport 22 -m comment --comment "01\n  test_04" -m state --state NEW -j ACCEPT\n- \$iptables_dir/iptables -A OUTPUT -p tcp -m tcp --dport 22 -m comment --comment\n  "01 test_04" -m state --state NEW -j ACCEPT\nruncmd:\n- if [ -f /etc/init.d/rsyslog ]; then /sbin/service rsyslog restart; elif [ -f /usr/lib/systemd/system/rsyslog.service\n  ]; then /bin/systemctl restart rsyslog.service; elif [ -f /etc/init.d/syslog ];\n  then /sbin/service syslog restart; else exit 1; fi\n- if [ -f /bin/systemctl ]; then /bin/systemctl restart crond; fi\ntimezone: Europe/mock\n' file_name='user-data' target_path='/var/lib/libvirt/instances/fmmed1'
+litp update -p /software/services/fmmed1/vm_firewall_rules/test1 -o provider=iptables action=drop
+
+#TORF-422322
+litp update -p /software/images/image1 -o name="fmmedsles"
+litp update -p /software/services/fmmed1 -o image_name="fmmedsles"
+
+litp create_plan
+assertConfigTask mn1 libvirt::write_file mn1userdatafmmed1 /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1 content='\#cloud-config\nbootcmd:\n- - cloud-init-per\n  - instance\n  - hostname\n  - sh\n  - -c\n  - hostnamectl set-hostname node-1-fmmed1\n- if [ -f /sbin/iptables ]; then iptables_dir="/sbin"; elif [ -f /usr/sbin/iptables\n  ]; then iptables_dir="/usr/sbin"; fi\n- \$iptables_dir/iptables -A INPUT -p tcp -m tcp --dport 22 -m comment --comment "01\n  test_04" -m state --state NEW -j DROP\n- \$iptables_dir/iptables -A OUTPUT -p tcp -m tcp --dport 22 -m comment --comment\n  "01 test_04" -m state --state NEW -j DROP\nruncmd:\n- if [ -f /etc/init.d/rsyslog ]; then /sbin/service rsyslog restart; elif [ -f /usr/lib/systemd/system/rsyslog.service\n  ]; then /bin/systemctl restart rsyslog.service; elif [ -f /etc/init.d/syslog ];\n  then /sbin/service syslog restart; else exit 1; fi\n- if [ -f /bin/systemctl ]; then /bin/systemctl restart crond; fi\ntimezone: Europe/mock\n' file_name='user-data' target_path='/var/lib/libvirt/instances/fmmed1'

@@ -1,0 +1,42 @@
+#############################################################
+#	TORF-107476: As a LITP User i want my VM to mount a tmpfs
+#	filesystem in order to facilitate Kafka persistence
+#
+#	Decription:
+#		Test to verify that a user can update a vm-ram-mount
+#		on a VM that will go from fail over to parallel and
+#		the VM-RAM_MOUNT is updated
+#
+#	Steps:
+#		1. Go from fail over to parallel
+#		2. Update vm-ram-mount to ramfs with additional
+#		properties
+#		3. Create/ Run plan
+#		4. Assert tasks are generated
+#	Expected Result:
+#		Assert the task is generated
+#############################################################
+
+runLitpScript ../basic_deployment.atlib
+
+# Create Fail over service group
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/fmmed1 -o name=fmmed1 active=1 standby=1 node_list='node_1,node_2'
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed
+
+litp create -t vm-ram-mount -p /software/services/fmmed1/vm_ram_mounts/mnt_1 -o type=tmpfs mount_point=/mnt/data
+
+litp create_plan
+litp run_plan
+
+# Step 1: Go from fail over to parallel
+# Step 2: Update vm-ram-mount to ramfs and additional properties
+litp update -p /deployments/test/clusters/cluster1/services/fmmed1 -o active=2
+litp update -p /software/services/fmmed1/vm_ram_mounts/mnt_1 -o type=ramfs mount_point=/mnt/data/tmp mount_options="size=512M"
+
+# Step 3: Create/ Run plan
+litp create_plan
+
+# Step 4: Assert tasks are generated
+assertTaskInPlan libvirt::write_file /deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed

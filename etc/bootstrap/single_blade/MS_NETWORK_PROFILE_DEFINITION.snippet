@@ -1,0 +1,12 @@
+litp create -p /infrastructure/systems/ms1/network_interfaces/nic1 -t nic -o interface_name="eth0" macaddress="${MS_EXTERNAL_MAC}"
+
+litp create -t network-profile -p /infrastructure/networking/network_profiles/ms_networking -o name='ms_net_profile' management_network='nodes'
+litp create -t interface -p /infrastructure/networking/network_profiles/ms_networking/interfaces/if0 -o interface_basename=eth0
+litp create -t interface -p /infrastructure/networking/network_profiles/ms_networking/interfaces/if1 -o interface_basename=eth1
+
+litp create -t bridge -p /infrastructure/networking/network_profiles/ms_networking/bridges/br0 -o stp=off forwarding_delay=1 bridge_name=br0 interfaces=if1
+litp create -t network -p /infrastructure/networking/network_profiles/ms_networking/networks/network0 -o network_name='nodes' bridge=br0 default_gateway='false'
+
+# Need a separate network for the connectivity to the outside world
+litp create -t ip-range -p /infrastructure/networking/ip_ranges/range2 -o network_name='ms_external' start="${IP_ADDRESS_EXTERNAL_MS_ADDR}" end="${IP_ADDRESS_EXTERNAL_MS_ADDR}" subnet="${IP_ADDRESS_EXTERNAL_SUBNET}" gateway="${IP_ADDRESS_EXTERNAL_GW}"
+litp create -t network -p /infrastructure/networking/network_profiles/ms_networking/networks/network1 -o network_name='ms_external' interface=if0 default_gateway='true'

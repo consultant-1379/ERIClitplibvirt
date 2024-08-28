@@ -1,0 +1,29 @@
+runLitpScript common_setup.atlib
+# Checks that vm-service removal works
+
+add-plugins clustering_plugin
+
+runLitpScript basic_deployment.atlib
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check="off"
+
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/test_cs -o name=test_cs -o active=2 standby=0 node_list=node_1,node_2
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/services/test_cs/applications/fmmed1
+
+litp create_plan
+failCallbackTask cb_create_cs_task /deployments/test/clusters/cluster1/services/test_cs
+litp run_plan
+
+# Make sure we've hit APD as that's what we're fixing
+assertAppliedPropertiesDeterminable -p /deployments/test/clusters/cluster1/services/test_cs False
+
+# Now test removal
+
+litp remove -p /deployments/test/clusters/cluster1/services/test_cs
+
+litp create_plan
+
+# Assert deconfigure tasks are generated
+assertConfigTask mn1 libvirt::deconfigure mn1deconfigurefmmed1 /deployments/test/clusters/cluster1/services/test_cs/applications/fmmed1 instance_name=fmmed1 base_os='rhel6'
+assertConfigTask mn2 libvirt::deconfigure mn2deconfigurefmmed1 /deployments/test/clusters/cluster1/services/test_cs/applications/fmmed1 instance_name=fmmed1 base_os='rhel6'

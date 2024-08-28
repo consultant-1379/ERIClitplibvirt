@@ -1,0 +1,19 @@
+runLitpScript common_setup.atlib
+# Prerequisite - LITP Deployment
+runLitpScript basic_deployment_with_bridge.atlib
+
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs1 -o name=httpd active=1 standby=1 node_list='node_1,node_2'
+litp create -t vm-image -p /software/images/image1 -o name="fmmed_old" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="dhcp" node_ip_map="{'n1': '10.10.10.2', 'n2': '10.10.10.1'}"
+
+
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/services/cs1/applications/fmmed1
+# We are going to cause a validation error by specifying the wrong image name because we are interested in
+# checking update_model result.
+assertError  create_plan
+# We are not expecting to have a value in node_ip_map if 'dhcp' is used
+assertProperty /software/services/fmmed1/vm_network_interfaces/net1 -o node_ip_map="{}"
+

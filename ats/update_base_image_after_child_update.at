@@ -1,0 +1,30 @@
+runLitpScript common_setup.atlib
+# AT to update vm-image name on an inherited service
+
+runLitpScript basic_deployment.atlib
+
+add-plugins yum_query_mock
+addMockDirectory /var/www/html/3pp/ 3pp/ 
+
+litp create -t vm-image -p /software/images/image1 -o name="image1" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-image -p /software/images/image2 -o name="image2" source_uri="http://ms1/images/fmmed-1.0.2.qcow2"
+litp create -t vm-image -p /software/images/image3 -o name="image3" source_uri="http://ms1/images/fmmed-1.0.3.qcow2"
+
+
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=image1 cpus=1 ram=128M internal_status_check=off
+
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/testservice -o name="fmmed1" active=2 standby=0 node_list='node_1,node_2'
+
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/services/testservice/applications/fmmed1
+
+
+# Update the image on the inherited service
+litp update -p /deployments/test/clusters/cluster1/services/testservice/applications/fmmed1 -o image_name="image2"
+
+litp create_plan
+litp run_plan
+
+#Update the image on the base
+litp update -p /software/services/fmmed1 -o image_name="image3"
+
+assertError --err_type DoNothingPlanError --err_message 'Create plan failed: no tasks were generated' create_plan

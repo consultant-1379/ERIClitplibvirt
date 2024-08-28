@@ -1,0 +1,52 @@
+runLitpScript ../common_setup.atlib
+
+litp create -p /software/profiles/rhel_6_4 -t os-profile -o name='sample-profile' path='/profiles/node-iso/'
+
+litp create -t libvirt-provider -p /infrastructure/system_providers/libvirt1 -o name=ms_vm_provider bridge=br0
+
+litp create -t libvirt-system -p /infrastructure/system_providers/libvirt1/systems/system1 -o system_name='MN1VM'
+litp create -t disk -p /infrastructure/system_providers/libvirt1/systems/system1/disks/vm_disk -o size=40400M name='hd0' uuid='SATA_QEMU_HARDDISK_QM00001' bootable='true'
+
+litp create -t libvirt-system -p /infrastructure/system_providers/libvirt1/systems/system2 -o system_name='MN2VM'
+litp create -t disk -p /infrastructure/system_providers/libvirt1/systems/system2/disks/vm_disk -o size=40400M name='hd0' uuid='SATA_QEMU_HARDDISK_QM00001' bootable='true'
+
+litp create -t network -p /infrastructure/networking/networks/n0 -o name=nodes subnet='10.4.23.0/24' litp_management=true
+litp create -t network -p /infrastructure/networking/networks/n1 -o name=ms_external subnet='10.5.23.0/24'
+
+litp create -t route -p /infrastructure/networking/routes/foo -o subnet='0.0.0.0/0' gateway='10.4.23.1'
+
+litp inherit -p /ms/libvirt -s /infrastructure/system_providers/libvirt1
+litp create -p /ms/services/cobbler -t cobbler-service
+
+litp create -p /deployments/local_vm -t deployment
+litp create -p /deployments/local_vm/clusters/cluster1 -t cluster
+
+litp create -p /deployments/local_vm/clusters/cluster1/nodes/node1 -t node -o hostname='node1'
+litp inherit -p /deployments/local_vm/clusters/cluster1/nodes/node1/system -s /infrastructure/system_providers/libvirt1/systems/system1
+litp inherit -p /deployments/local_vm/clusters/cluster1/nodes/node1/os -s /software/profiles/rhel_6_4
+litp inherit -p /deployments/local_vm/clusters/cluster1/nodes/node1/routes/r0 -s /infrastructure/networking/routes/foo
+
+litp create -p /deployments/local_vm/clusters/cluster1/nodes/node2 -t node -o hostname='node2'
+litp inherit -p /deployments/local_vm/clusters/cluster1/nodes/node2/system -s /infrastructure/system_providers/libvirt1/systems/system2
+litp inherit -p /deployments/local_vm/clusters/cluster1/nodes/node2/os -s /software/profiles/rhel_6_4
+litp inherit -p /deployments/local_vm/clusters/cluster1/nodes/node2/routes/r0 -s /infrastructure/networking/routes/foo
+
+litp create -t storage-profile -p /infrastructure/storage/storage_profiles/vm_storage -o volume_driver='lvm'
+litp create -t volume-group -p /infrastructure/storage/storage_profiles/vm_storage/volume_groups/vg1 -o volume_group_name='VM_VG'
+litp create -t file-system -p /infrastructure/storage/storage_profiles/vm_storage/volume_groups/vg1/file_systems/fs1 -o type='ext4' mount_point='/' size='16G'
+litp create -t file-system -p /infrastructure/storage/storage_profiles/vm_storage/volume_groups/vg1/file_systems/fs2 -o type='swap' mount_point='swap' size='2G'
+litp create -t physical-device -p /infrastructure/storage/storage_profiles/vm_storage/volume_groups/vg1/physical_devices/pd1 -o device_name='hd0'
+
+litp inherit -p /deployments/local_vm/clusters/cluster1/nodes/node1/storage_profile -s /infrastructure/storage/storage_profiles/vm_storage
+litp inherit -p /deployments/local_vm/clusters/cluster1/nodes/node2/storage_profile -s /infrastructure/storage/storage_profiles/vm_storage
+
+litp create -t eth -p /ms/network_interfaces/if0 -o device_name=eth0 macaddress=08:00:27:5B:C1:3C network_name=ms_external ipaddress=10.5.23.50
+litp create -t eth -p /ms/network_interfaces/if1 -o device_name=eth1 macaddress=08:00:27:5B:C1:3D bridge=br0
+litp create -t bridge -p /ms/network_interfaces/if2 -o device_name=br0 stp=false forwarding_delay=4 network_name=nodes ipaddress=10.4.23.50
+litp create -t eth -p /deployments/local_vm/clusters/cluster1/nodes/node1/network_interfaces/if0 -o device_name=eth0 macaddress=08:00:27:5B:C1:3F network_name=nodes ipaddress=10.4.23.51
+litp create -t eth -p /deployments/local_vm/clusters/cluster1/nodes/node2/network_interfaces/if0 -o device_name=eth0 macaddress=08:00:27:65:C8:B4 network_name=nodes ipaddress=10.4.23.52
+
+litp create_plan
+litp run_plan
+litp remove -p /plans/plan
+

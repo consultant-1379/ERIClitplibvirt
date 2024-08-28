@@ -1,0 +1,28 @@
+runLitpScript common_setup.atlib
+# Checks that vm-service removal works
+
+add-plugins yum_query_mock
+
+runLitpScript basic_deployment_with_bridge.atlib
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check="off"
+
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs1 -o name=cs1 active=2 standby=0 node_list=node_1,node_2
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/services/cs1/applications/fmmed1
+
+litp create_plan
+litp run_plan
+
+# Now test removal
+add-plugins yum_query_mock_update
+
+litp remove -p /deployments/test/clusters/cluster1/services/cs1
+
+litp create_plan
+
+assertState -p /deployments/test/clusters/cluster1/services/cs1/applications/fmmed1 ForRemoval
+
+# Assert deconfigure tasks are generated
+assertConfigTask mn1 libvirt::deconfigure mn1deconfigurefmmed1 /deployments/test/clusters/cluster1/services/cs1/applications/fmmed1 instance_name=fmmed1 base_os='rhel6'
+assertConfigTask mn2 libvirt::deconfigure mn2deconfigurefmmed1 /deployments/test/clusters/cluster1/services/cs1/applications/fmmed1 instance_name=fmmed1 base_os='rhel6'

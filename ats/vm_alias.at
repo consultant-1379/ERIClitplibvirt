@@ -1,0 +1,16 @@
+runLitpScript common_setup.atlib
+runLitpScript basic_deployment.atlib
+
+add-plugins yum_query_mock
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.10.51"
+# add a vm-alias. this should trigger a task to generate userdata
+litp create -t vm-alias   -p /software/services/fmmed1/vm_aliases/db1 -o alias_names=dbsvc1 address=10.10.10.102
+
+litp create_plan
+
+# ConfigTask created
+assertConfigTask mn1 libvirt::write_file mn1userdatafmmed1 /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1 target_path='/var/lib/libvirt/instances/fmmed1' file_name='user-data' content='\#cloud-config\nbootcmd:\n- - cloud-init-per\n  - instance\n  - hostname\n  - sh\n  - -c\n  - hostnamectl set-hostname node-1-fmmed1\n- - cloud-init-per\n  - instance\n  - alias0\n  - sh\n  - -c\n  - echo 10.10.10.102 dbsvc1 >> /etc/hosts\nruncmd:\n- if [ -f /etc/init.d/rsyslog ]; then /sbin/service rsyslog restart; elif [ -f /usr/lib/systemd/system/rsyslog.service\n  ]; then /bin/systemctl restart rsyslog.service; elif [ -f /etc/init.d/syslog ];\n  then /sbin/service syslog restart; else exit 1; fi\n- if [ -f /bin/systemctl ]; then /bin/systemctl restart crond; fi\ntimezone: Europe/mock\n'

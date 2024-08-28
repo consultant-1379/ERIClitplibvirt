@@ -1,0 +1,3 @@
+litp link -t network-profile -p /ms/network_profile -o name='ms_net_profile'
+litp link -t libvirt-provider -p /ms/libvirt -o name=ms_vm_provider
+litp link -t ip-range -p /ms/ipaddresses/external -o network_name='ms_external' address=${IP_ADDRESS_EXTERNAL_MS_ADDR}

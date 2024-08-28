@@ -1,0 +1,198 @@
+#################
+# This AT library builds scenario to be used in
+# AT's related to TORF-159934
+#
+# Scenario:
+#   * Networks
+#       mgmt.: litp management and traffic accross all nodes
+#       tr_1.: traffic inside node 1
+#       tr_2.: traffic inside node 2
+#       tr_3.: traffic inside node 3
+#       tr_12: traffic between nodes 1 and 2
+#       tr_13: traffic between nodes 1 and 3
+#       tr_23: traffic between nodes 2 and 3
+#       bkup.: backup network
+#       hb1..: heartbeat
+#       hb2..: heartbeat
+#
+
+####
+# Mocks
+#
+addMockDirectory /var/www/html/images   ../general_images
+
+####
+# Infrastructure
+#
+litp create  -p /infrastructure/systems/system1 -t system -o system_name='AT_LIBVIRT'
+litp create  -p /infrastructure/storage/storage_profiles/profile_1 -t storage-profile-base
+
+# Networks
+litp create  -p /infrastructure/networking/networks/mgmt  -t network -o name='mgmt'  subnet='10.0.0.0/24'  litp_management='true'
+litp create  -p /infrastructure/networking/networks/tr_1  -t network -o name='tr_1'  subnet='10.1.1.0/24'
+litp create  -p /infrastructure/networking/networks/tr_2  -t network -o name='tr_2'  subnet='10.1.2.0/24'
+litp create  -p /infrastructure/networking/networks/tr_3  -t network -o name='tr_3'  subnet='10.1.3.0/24'
+litp create  -p /infrastructure/networking/networks/tr_12 -t network -o name='tr_12' subnet='10.1.12.0/24'
+litp create  -p /infrastructure/networking/networks/tr_13 -t network -o name='tr_13' subnet='10.1.13.0/24'
+litp create  -p /infrastructure/networking/networks/tr_23 -t network -o name='tr_23' subnet='10.1.23.0/24'
+litp create  -p /infrastructure/networking/networks/bkup  -t network -o name='bkup'  subnet='10.2.20.0/24'
+litp create  -p /infrastructure/networking/networks/hb1   -t network -o name='hb1'
+litp create  -p /infrastructure/networking/networks/hb2   -t network -o name='hb2'
+
+# Routes
+litp create  -p /infrastructure/networking/routes/r1 -t route -o subnet='0.0.0.0/0'     gateway='10.0.0.1'
+litp create  -p /infrastructure/networking/routes/r2 -t route -o subnet='10.55.20.0/24' gateway='10.1.12.1'
+litp create  -p /infrastructure/networking/routes/r3 -t route -o subnet='10.55.30.0/24' gateway='10.1.13.1'
+litp create  -p /infrastructure/networking/routes/r4 -t route -o subnet='10.55.40.0/24' gateway='10.1.23.1'
+
+####
+# Software
+#
+litp create  -p /software/profiles/rhel_6_4 -t os-profile -o name='sample-profile' path='/profiles/node-iso/'
+litp create  -p /software/images/vimage -t vm-image -o name='vimage' source_uri='http://ms1/images/fmmed-1.0.1.qcow2'
+
+# Failover VM services
+litp create  -p /software/services/vs_f12 -t vm-service -o service_name='vs-f12' image_name='vimage' cpus='1' ram='128M'
+litp create  -p /software/services/vs_f13 -t vm-service -o service_name='vs-f13' image_name='vimage' cpus='1' ram='128M'
+litp create  -p /software/services/vs_f23 -t vm-service -o service_name='vs-f23' image_name='vimage' cpus='1' ram='128M'
+litp create  -p /software/services/vs_f12/vm_network_interfaces/vif0 -t vm-network-interface -o network_name='tr_12' device_name='eth0' host_device='br_12' ipaddresses='10.1.12.50'
+litp create  -p /software/services/vs_f13/vm_network_interfaces/vif0 -t vm-network-interface -o network_name='tr_13' device_name='eth0' host_device='br_13' ipaddresses='10.1.13.50'
+litp create  -p /software/services/vs_f23/vm_network_interfaces/vif0 -t vm-network-interface -o network_name='tr_23' device_name='eth0' host_device='br_23' ipaddresses='10.1.23.50'
+
+# Parallel VM services
+litp create  -p /software/services/vs_p1  -t vm-service -o service_name='vs-p1'  image_name='vimage' cpus='1' ram='128M'
+litp create  -p /software/services/vs_p2  -t vm-service -o service_name='vs-p2'  image_name='vimage' cpus='1' ram='128M'
+litp create  -p /software/services/vs_p3  -t vm-service -o service_name='vs-p3'  image_name='vimage' cpus='1' ram='128M'
+litp create  -p /software/services/vs_p12 -t vm-service -o service_name='vs-p12' image_name='vimage' cpus='1' ram='128M'
+litp create  -p /software/services/vs_p13 -t vm-service -o service_name='vs-p13' image_name='vimage' cpus='1' ram='128M'
+litp create  -p /software/services/vs_p23 -t vm-service -o service_name='vs-p23' image_name='vimage' cpus='1' ram='128M'
+litp create  -p /software/services/vs_p1/vm_network_interfaces/vif0  -t vm-network-interface -o network_name='tr_1'  device_name='eth0' host_device='br_1'  ipaddresses='10.1.1.100'
+litp create  -p /software/services/vs_p2/vm_network_interfaces/vif0  -t vm-network-interface -o network_name='tr_2'  device_name='eth0' host_device='br_2'  ipaddresses='10.1.2.100'
+litp create  -p /software/services/vs_p3/vm_network_interfaces/vif0  -t vm-network-interface -o network_name='tr_3'  device_name='eth0' host_device='br_3'  ipaddresses='10.1.3.100'
+litp create  -p /software/services/vs_p12/vm_network_interfaces/vif0 -t vm-network-interface -o network_name='tr_12' device_name='eth0' host_device='br_12' ipaddresses='10.1.12.100,10.1.12.101'
+litp create  -p /software/services/vs_p13/vm_network_interfaces/vif0 -t vm-network-interface -o network_name='tr_13' device_name='eth0' host_device='br_13' ipaddresses='10.1.13.100,10.1.13.101'
+litp create  -p /software/services/vs_p23/vm_network_interfaces/vif0 -t vm-network-interface -o network_name='tr_23' device_name='eth0' host_device='br_23' ipaddresses='10.1.23.100,10.1.23.101'
+
+# Parallel VM services with other networks
+litp create  -p /software/services/vs_p2_with_3 -t vm-service -o service_name='vs-p1-with-2'  image_name='vimage' cpus='1' ram='128M'
+litp create  -p /software/services/vs_p2_with_3/vm_network_interfaces/vif0 -t vm-network-interface -o network_name='tr_2' device_name='eth0' host_device='br_2' ipaddresses='10.1.2.200'
+litp create  -p /software/services/vs_p2_with_3/vm_network_interfaces/vif1 -t vm-network-interface -o network_name='tr_3' device_name='eth1' host_device='br_3' ipaddresses='10.1.3.200'
+
+####
+# MS
+#
+litp create  -p /ms/network_interfaces/if0 -t eth -o network_name='mgmt' ipaddress='10.0.0.2' device_name='eth0' macaddress='00:00:00:00:00:01'
+litp inherit -p /ms/routes/r1 -s /infrastructure/networking/routes/r1
+
+####
+# Deployments
+#
+litp create  -p /deployments/at -t deployment
+
+# Node 1
+litp create  -p /deployments/at/clusters/c1 -t cluster
+litp create  -p /deployments/at/clusters/c1/nodes/n1 -t node -o hostname='node1'
+litp inherit -p /deployments/at/clusters/c1/nodes/n1/system -s /infrastructure/systems/system1
+litp inherit -p /deployments/at/clusters/c1/nodes/n1/os -s /software/profiles/rhel_6_4
+litp inherit -p /deployments/at/clusters/c1/nodes/n1/storage_profile -s /infrastructure/storage/storage_profiles/profile_1
+
+litp inherit -p /deployments/at/clusters/c1/nodes/n1/routes/r1 -s /infrastructure/networking/routes/r1
+litp inherit -p /deployments/at/clusters/c1/nodes/n1/routes/r2 -s /infrastructure/networking/routes/r2
+litp inherit -p /deployments/at/clusters/c1/nodes/n1/routes/r3 -s /infrastructure/networking/routes/r3
+litp inherit -p /deployments/at/clusters/c1/nodes/n1/routes/r4 -s /infrastructure/networking/routes/r4
+
+litp create  -p /deployments/at/clusters/c1/nodes/n1/network_interfaces/if0  -t eth -o device_name='eth0' macaddress='00:00:00:01:00:00' network_name='mgmt' ipaddress='10.0.0.3'
+litp create  -p /deployments/at/clusters/c1/nodes/n1/network_interfaces/if4  -t eth -o device_name='eth1' macaddress='00:00:00:01:00:01' bridge='br_1'
+litp create  -p /deployments/at/clusters/c1/nodes/n1/network_interfaces/if5  -t eth -o device_name='eth2' macaddress='00:00:00:01:00:02' bridge='br_2'
+litp create  -p /deployments/at/clusters/c1/nodes/n1/network_interfaces/if6  -t eth -o device_name='eth3' macaddress='00:00:00:01:00:03' bridge='br_3'
+litp create  -p /deployments/at/clusters/c1/nodes/n1/network_interfaces/if7  -t eth -o device_name='eth4' macaddress='00:00:00:01:00:12' bridge='br_12'
+litp create  -p /deployments/at/clusters/c1/nodes/n1/network_interfaces/if8  -t eth -o device_name='eth5' macaddress='00:00:00:01:00:13' bridge='br_13'
+litp create  -p /deployments/at/clusters/c1/nodes/n1/network_interfaces/if9  -t eth -o device_name='eth6' macaddress='00:00:00:01:00:23' bridge='br_23'
+
+litp create  -p /deployments/at/clusters/c1/nodes/n1/network_interfaces/br3 -t bridge -o device_name='br_1'  network_name='tr_1'  ipaddress='10.1.1.3'
+litp create  -p /deployments/at/clusters/c1/nodes/n1/network_interfaces/br4 -t bridge -o device_name='br_2'  network_name='tr_2'  ipaddress='10.1.2.3'
+litp create  -p /deployments/at/clusters/c1/nodes/n1/network_interfaces/br5 -t bridge -o device_name='br_3'  network_name='tr_3'  ipaddress='10.1.3.3'
+litp create  -p /deployments/at/clusters/c1/nodes/n1/network_interfaces/br6 -t bridge -o device_name='br_12' network_name='tr_12' ipaddress='10.1.12.3'
+litp create  -p /deployments/at/clusters/c1/nodes/n1/network_interfaces/br7 -t bridge -o device_name='br_13' network_name='tr_13' ipaddress='10.1.13.3'
+litp create  -p /deployments/at/clusters/c1/nodes/n1/network_interfaces/br8 -t bridge -o device_name='br_23' network_name='tr_23' ipaddress='10.1.23.3'
+
+# Node 2
+litp create  -p /deployments/at/clusters/c1/nodes/n2 -t node -o hostname='node2'
+litp inherit -p /deployments/at/clusters/c1/nodes/n2/system -s /infrastructure/systems/system1
+litp inherit -p /deployments/at/clusters/c1/nodes/n2/os -s /software/profiles/rhel_6_4
+litp inherit -p /deployments/at/clusters/c1/nodes/n2/storage_profile -s /infrastructure/storage/storage_profiles/profile_1
+
+litp inherit -p /deployments/at/clusters/c1/nodes/n2/routes/r1 -s /infrastructure/networking/routes/r1
+litp inherit -p /deployments/at/clusters/c1/nodes/n2/routes/r2 -s /infrastructure/networking/routes/r2
+litp inherit -p /deployments/at/clusters/c1/nodes/n2/routes/r3 -s /infrastructure/networking/routes/r3
+litp inherit -p /deployments/at/clusters/c1/nodes/n2/routes/r4 -s /infrastructure/networking/routes/r4
+
+litp create  -p /deployments/at/clusters/c1/nodes/n2/network_interfaces/if0  -t eth -o device_name='eth0' macaddress='00:00:00:02:00:00' network_name='mgmt' ipaddress='10.0.0.4'
+litp create  -p /deployments/at/clusters/c1/nodes/n2/network_interfaces/if4  -t eth -o device_name='eth1' macaddress='00:00:00:02:00:01' bridge='br_1'
+litp create  -p /deployments/at/clusters/c1/nodes/n2/network_interfaces/if5  -t eth -o device_name='eth2' macaddress='00:00:00:02:00:02' bridge='br_2'
+litp create  -p /deployments/at/clusters/c1/nodes/n2/network_interfaces/if6  -t eth -o device_name='eth3' macaddress='00:00:00:02:00:03' bridge='br_3'
+litp create  -p /deployments/at/clusters/c1/nodes/n2/network_interfaces/if7  -t eth -o device_name='eth4' macaddress='00:00:00:02:00:12' bridge='br_12'
+litp create  -p /deployments/at/clusters/c1/nodes/n2/network_interfaces/if8  -t eth -o device_name='eth5' macaddress='00:00:00:02:00:13' bridge='br_13'
+litp create  -p /deployments/at/clusters/c1/nodes/n2/network_interfaces/if9  -t eth -o device_name='eth6' macaddress='00:00:00:02:00:23' bridge='br_23'
+
+litp create  -p /deployments/at/clusters/c1/nodes/n2/network_interfaces/br3 -t bridge -o device_name='br_1'  network_name='tr_1'  ipaddress='10.1.1.4'
+litp create  -p /deployments/at/clusters/c1/nodes/n2/network_interfaces/br4 -t bridge -o device_name='br_2'  network_name='tr_2'  ipaddress='10.1.2.4'
+litp create  -p /deployments/at/clusters/c1/nodes/n2/network_interfaces/br5 -t bridge -o device_name='br_3'  network_name='tr_3'  ipaddress='10.1.3.4'
+litp create  -p /deployments/at/clusters/c1/nodes/n2/network_interfaces/br6 -t bridge -o device_name='br_12' network_name='tr_12' ipaddress='10.1.12.4'
+litp create  -p /deployments/at/clusters/c1/nodes/n2/network_interfaces/br7 -t bridge -o device_name='br_13' network_name='tr_13' ipaddress='10.1.13.4'
+litp create  -p /deployments/at/clusters/c1/nodes/n2/network_interfaces/br8 -t bridge -o device_name='br_23' network_name='tr_23' ipaddress='10.1.23.4'
+
+# Node 3
+litp create  -p /deployments/at/clusters/c1/nodes/n3 -t node -o hostname='node3'
+litp inherit -p /deployments/at/clusters/c1/nodes/n3/system -s /infrastructure/systems/system1
+litp inherit -p /deployments/at/clusters/c1/nodes/n3/os -s /software/profiles/rhel_6_4
+litp inherit -p /deployments/at/clusters/c1/nodes/n3/storage_profile -s /infrastructure/storage/storage_profiles/profile_1
+
+litp inherit -p /deployments/at/clusters/c1/nodes/n3/routes/r1 -s /infrastructure/networking/routes/r1
+litp inherit -p /deployments/at/clusters/c1/nodes/n3/routes/r2 -s /infrastructure/networking/routes/r2
+litp inherit -p /deployments/at/clusters/c1/nodes/n3/routes/r3 -s /infrastructure/networking/routes/r3
+litp inherit -p /deployments/at/clusters/c1/nodes/n3/routes/r4 -s /infrastructure/networking/routes/r4
+
+litp create  -p /deployments/at/clusters/c1/nodes/n3/network_interfaces/if0  -t eth -o device_name='eth0' macaddress='00:00:00:03:00:00' network_name='mgmt' ipaddress='10.0.0.5'
+litp create  -p /deployments/at/clusters/c1/nodes/n3/network_interfaces/if4  -t eth -o device_name='eth1' macaddress='00:00:00:03:00:01' bridge='br_1'
+litp create  -p /deployments/at/clusters/c1/nodes/n3/network_interfaces/if5  -t eth -o device_name='eth2' macaddress='00:00:00:03:00:02' bridge='br_2'
+litp create  -p /deployments/at/clusters/c1/nodes/n3/network_interfaces/if6  -t eth -o device_name='eth3' macaddress='00:00:00:03:00:03' bridge='br_3'
+litp create  -p /deployments/at/clusters/c1/nodes/n3/network_interfaces/if7  -t eth -o device_name='eth4' macaddress='00:00:00:03:00:12' bridge='br_12'
+litp create  -p /deployments/at/clusters/c1/nodes/n3/network_interfaces/if8  -t eth -o device_name='eth5' macaddress='00:00:00:03:00:13' bridge='br_13'
+litp create  -p /deployments/at/clusters/c1/nodes/n3/network_interfaces/if9  -t eth -o device_name='eth6' macaddress='00:00:00:03:00:23' bridge='br_23'
+
+litp create  -p /deployments/at/clusters/c1/nodes/n3/network_interfaces/br3 -t bridge -o device_name='br_1'  network_name='tr_1'  ipaddress='10.1.1.5'
+litp create  -p /deployments/at/clusters/c1/nodes/n3/network_interfaces/br4 -t bridge -o device_name='br_2'  network_name='tr_2'  ipaddress='10.1.2.5'
+litp create  -p /deployments/at/clusters/c1/nodes/n3/network_interfaces/br5 -t bridge -o device_name='br_3'  network_name='tr_3'  ipaddress='10.1.3.5'
+litp create  -p /deployments/at/clusters/c1/nodes/n3/network_interfaces/br6 -t bridge -o device_name='br_12' network_name='tr_12' ipaddress='10.1.12.5'
+litp create  -p /deployments/at/clusters/c1/nodes/n3/network_interfaces/br7 -t bridge -o device_name='br_13' network_name='tr_13' ipaddress='10.1.13.5'
+litp create  -p /deployments/at/clusters/c1/nodes/n3/network_interfaces/br8 -t bridge -o device_name='br_23' network_name='tr_23' ipaddress='10.1.23.5'
+
+# VM Clustered Services
+# Failover
+litp create  -p /deployments/at/clusters/c1/services/vcs_f12 -t clustered-service -o name='vcs-f12' active='1' standby='1' node_list='n1,n2'
+litp create  -p /deployments/at/clusters/c1/services/vcs_f13 -t clustered-service -o name='vcs-f13' active='1' standby='1' node_list='n1,n3'
+litp create  -p /deployments/at/clusters/c1/services/vcs_f23 -t clustered-service -o name='vcs-f23' active='1' standby='1' node_list='n2,n3'
+litp inherit -p /deployments/at/clusters/c1/services/vcs_f12/applications/vapp -s /software/services/vs_f12
+litp inherit -p /deployments/at/clusters/c1/services/vcs_f13/applications/vapp -s /software/services/vs_f13
+litp inherit -p /deployments/at/clusters/c1/services/vcs_f23/applications/vapp -s /software/services/vs_f23
+
+# Parallel
+litp create  -p /deployments/at/clusters/c1/services/vcs_p1  -t clustered-service -o name='vcs-p1'  active='1' standby='0' node_list='n1'
+litp create  -p /deployments/at/clusters/c1/services/vcs_p2  -t clustered-service -o name='vcs-p2'  active='1' standby='0' node_list='n2'
+litp create  -p /deployments/at/clusters/c1/services/vcs_p3  -t clustered-service -o name='vcs-p3'  active='1' standby='0' node_list='n3'
+litp create  -p /deployments/at/clusters/c1/services/vcs_p12 -t clustered-service -o name='vcs-p12' active='2' standby='0' node_list='n1,n2'
+litp create  -p /deployments/at/clusters/c1/services/vcs_p13 -t clustered-service -o name='vcs-p13' active='2' standby='0' node_list='n1,n3'
+litp create  -p /deployments/at/clusters/c1/services/vcs_p23 -t clustered-service -o name='vcs-p23' active='2' standby='0' node_list='n2,n3'
+litp inherit -p /deployments/at/clusters/c1/services/vcs_p1/applications/vapp  -s /software/services/vs_p1
+litp inherit -p /deployments/at/clusters/c1/services/vcs_p2/applications/vapp  -s /software/services/vs_p2
+litp inherit -p /deployments/at/clusters/c1/services/vcs_p3/applications/vapp  -s /software/services/vs_p3
+litp inherit -p /deployments/at/clusters/c1/services/vcs_p12/applications/vapp -s /software/services/vs_p12
+litp inherit -p /deployments/at/clusters/c1/services/vcs_p13/applications/vapp -s /software/services/vs_p13
+litp inherit -p /deployments/at/clusters/c1/services/vcs_p23/applications/vapp -s /software/services/vs_p23
+
+####
+# Run plan
+#
+litp create_plan
+litp run_plan

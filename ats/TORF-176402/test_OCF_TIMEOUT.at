@@ -1,0 +1,35 @@
+runLitpScript ../common_setup.atlib
+runLitpScript ../basic_deployment.atlib
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+# 1 - ha-service-config with a status_timeout.
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/fmmed1 -o name=fmmed1 active=2 standby=0 node_list='node_1,node_2'
+litp create -t ha-service-config -p /deployments/test/clusters/cluster1/services/fmmed1/ha_configs/service1_conf -o status_timeout=10 tolerance_limit=2 fault_on_monitor_timeouts=2 clean_timeout=100 service_id=fmmed
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed
+
+# 2 - ha-service-config without a status_timeout, default used.
+litp create -t vm-service -p /software/services/fmmed2 -o service_name=fmmed2 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/fmmed2 -o name=fmmed2 active=1 standby=1 node_list='node_1,node_2'
+litp create -t ha-service-config -p /deployments/test/clusters/cluster1/services/fmmed2/ha_configs/service2_conf -o tolerance_limit=2 fault_on_monitor_timeouts=2 clean_timeout=100 service_id=fmmed
+litp inherit -s /software/services/fmmed2 -p /deployments/test/clusters/cluster1/services/fmmed2/applications/fmmed
+
+# 3 - no ha-service-config, default used.
+litp create -t vm-service -p /software/services/fmmed3 -o service_name=fmmed3 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/fmmed3 -o name=fmmed3 active=2 standby=0 node_list='node_1,node_2'
+litp inherit -s /software/services/fmmed3 -p /deployments/test/clusters/cluster1/services/fmmed3/applications/fmmed
+
+litp create_plan
+
+# Task created service 1
+assertConfigTask mn1 libvirt::write_file mn1userdatafmmed1 /deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed target_path='/var/lib/libvirt/instances/fmmed1' file_name='user-data' content='\#cloud-config\nbootcmd:\n- - cloud-init-per\n  - instance\n  - hostname\n  - sh\n  - -c\n  - hostnamectl set-hostname node-1-fmmed1\n- - cloud-init-per\n  - instance\n  - vmmonitored_timeout\n  - sh\n  - -c\n  - echo export OCF_TIMEOUT=10  >> /etc/sysconfig/vmmonitord\nruncmd:\n- if [ -f /etc/init.d/rsyslog ]; then /sbin/service rsyslog restart; elif [ -f /usr/lib/systemd/system/rsyslog.service\n  ]; then /bin/systemctl restart rsyslog.service; elif [ -f /etc/init.d/syslog ];\n  then /sbin/service syslog restart; else exit 1; fi\n- if [ -f /bin/systemctl ]; then /bin/systemctl restart crond; fi\ntimezone: Europe/mock\n'
+assertConfigTask mn2 libvirt::write_file mn2userdatafmmed1 /deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed target_path='/var/lib/libvirt/instances/fmmed1' file_name='user-data' content='\#cloud-config\nbootcmd:\n- - cloud-init-per\n  - instance\n  - hostname\n  - sh\n  - -c\n  - hostnamectl set-hostname node-2-fmmed1\n- - cloud-init-per\n  - instance\n  - vmmonitored_timeout\n  - sh\n  - -c\n  - echo export OCF_TIMEOUT=10  >> /etc/sysconfig/vmmonitord\nruncmd:\n- if [ -f /etc/init.d/rsyslog ]; then /sbin/service rsyslog restart; elif [ -f /usr/lib/systemd/system/rsyslog.service\n  ]; then /bin/systemctl restart rsyslog.service; elif [ -f /etc/init.d/syslog ];\n  then /sbin/service syslog restart; else exit 1; fi\n- if [ -f /bin/systemctl ]; then /bin/systemctl restart crond; fi\ntimezone: Europe/mock\n'
+
+# Task created service 2
+assertConfigTask mn1 libvirt::write_file mn1userdatafmmed2 /deployments/test/clusters/cluster1/services/fmmed2/applications/fmmed target_path='/var/lib/libvirt/instances/fmmed2' file_name='user-data' content='\#cloud-config\nbootcmd:\n- - cloud-init-per\n  - instance\n  - hostname\n  - sh\n  - -c\n  - hostnamectl set-hostname fmmed2\nruncmd:\n- if [ -f /etc/init.d/rsyslog ]; then /sbin/service rsyslog restart; elif [ -f /usr/lib/systemd/system/rsyslog.service\n  ]; then /bin/systemctl restart rsyslog.service; elif [ -f /etc/init.d/syslog ];\n  then /sbin/service syslog restart; else exit 1; fi\n- if [ -f /bin/systemctl ]; then /bin/systemctl restart crond; fi\ntimezone: Europe/mock\n'
+assertConfigTask mn2 libvirt::write_file mn2userdatafmmed2 /deployments/test/clusters/cluster1/services/fmmed2/applications/fmmed target_path='/var/lib/libvirt/instances/fmmed2' file_name='user-data' content='\#cloud-config\nbootcmd:\n- - cloud-init-per\n  - instance\n  - hostname\n  - sh\n  - -c\n  - hostnamectl set-hostname fmmed2\nruncmd:\n- if [ -f /etc/init.d/rsyslog ]; then /sbin/service rsyslog restart; elif [ -f /usr/lib/systemd/system/rsyslog.service\n  ]; then /bin/systemctl restart rsyslog.service; elif [ -f /etc/init.d/syslog ];\n  then /sbin/service syslog restart; else exit 1; fi\n- if [ -f /bin/systemctl ]; then /bin/systemctl restart crond; fi\ntimezone: Europe/mock\n'
+
+# Task created service 3
+assertConfigTask mn1 libvirt::write_file mn1userdatafmmed3 /deployments/test/clusters/cluster1/services/fmmed3/applications/fmmed target_path='/var/lib/libvirt/instances/fmmed3' file_name='user-data' content='\#cloud-config\nbootcmd:\n- - cloud-init-per\n  - instance\n  - hostname\n  - sh\n  - -c\n  - hostnamectl set-hostname node-1-fmmed3\nruncmd:\n- if [ -f /etc/init.d/rsyslog ]; then /sbin/service rsyslog restart; elif [ -f /usr/lib/systemd/system/rsyslog.service\n  ]; then /bin/systemctl restart rsyslog.service; elif [ -f /etc/init.d/syslog ];\n  then /sbin/service syslog restart; else exit 1; fi\n- if [ -f /bin/systemctl ]; then /bin/systemctl restart crond; fi\ntimezone: Europe/mock\n'
+assertConfigTask mn2 libvirt::write_file mn2userdatafmmed3 /deployments/test/clusters/cluster1/services/fmmed3/applications/fmmed target_path='/var/lib/libvirt/instances/fmmed3' file_name='user-data' content='\#cloud-config\nbootcmd:\n- - cloud-init-per\n  - instance\n  - hostname\n  - sh\n  - -c\n  - hostnamectl set-hostname node-2-fmmed3\nruncmd:\n- if [ -f /etc/init.d/rsyslog ]; then /sbin/service rsyslog restart; elif [ -f /usr/lib/systemd/system/rsyslog.service\n  ]; then /bin/systemctl restart rsyslog.service; elif [ -f /etc/init.d/syslog ];\n  then /sbin/service syslog restart; else exit 1; fi\n- if [ -f /bin/systemctl ]; then /bin/systemctl restart crond; fi\ntimezone: Europe/mock\n'

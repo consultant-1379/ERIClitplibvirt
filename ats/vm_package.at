@@ -1,0 +1,21 @@
+runLitpScript common_setup.atlib
+# An AT to check the creation of the vm-package item type and the config task
+
+runLitpScript basic_deployment.atlib
+
+add-plugins yum_query_mock
+addMockDirectory /var/www/html/3pp/ 3pp/
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1
+
+litp create -t vm-yum-repo -p /software/services/fmmed1/vm_yum_repos/repo1 -o name=3pp base_url="http://ms/3pp"
+litp create -t vm-package -p /software/services/fmmed1/vm_packages/a -o name=EXTRlitprubyrgen_CXP9031337
+
+litp create -t vm-alias   -p /software/services/fmmed1/vm_aliases/ms -o alias_names=ms address=10.10.10.100
+
+litp create_plan
+
+# ConfigTask created
+assertConfigTask mn1 libvirt::write_file mn1userdatafmmed1 /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1 target_path='/var/lib/libvirt/instances/fmmed1' file_name='user-data' content='\#cloud-config\nbootcmd:\n- - cloud-init-per\n  - instance\n  - hostname\n  - sh\n  - -c\n  - hostnamectl set-hostname node-1-fmmed1\n- - cloud-init-per\n  - instance\n  - alias0\n  - sh\n  - -c\n  - echo 10.10.10.100 ms >> /etc/hosts\npackages:\n- EXTRlitprubyrgen_CXP9031337\nruncmd:\n- if [ -f /etc/init.d/rsyslog ]; then /sbin/service rsyslog restart; elif [ -f /usr/lib/systemd/system/rsyslog.service\n  ]; then /bin/systemctl restart rsyslog.service; elif [ -f /etc/init.d/syslog ];\n  then /sbin/service syslog restart; else exit 1; fi\n- if [ -f /bin/systemctl ]; then /bin/systemctl restart crond; fi\ntimezone: Europe/mock\nyum_repos:\n  3pp:\n    baseurl: http://ms/3pp\n    enabled: true\n    gpgcheck: false\n    name: 3pp\n'

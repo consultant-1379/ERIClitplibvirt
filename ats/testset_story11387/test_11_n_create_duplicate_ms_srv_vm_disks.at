@@ -1,0 +1,10 @@
+# AT to check the creation of duplicate ms server vm disks.
+runLitpScript deployment_11387.atlib
+
+#Create a duplicate MS server VM disk
+litp create -t vm-disk -p /ms/services/fmmed2/vm_disks/duplicate_data -o host_volume_group=vg1 host_file_system=vm1 mount_point=/mnt/data2
+
+let __err_1 --err_message 'The file-system "vg1/vm1" is already defined. The file-system must be in use by one VM only' --err_vpath /ms/services/fmmed2/vm_disks/data
+let __err_2 --err_message 'The file-system "vg1/vm1" is already defined. The file-system must be in use by one VM only' --err_vpath /ms/services/fmmed2/vm_disks/duplicate_data
+
+assertError --errors_length 2 __err_1 __err_2 create_plan

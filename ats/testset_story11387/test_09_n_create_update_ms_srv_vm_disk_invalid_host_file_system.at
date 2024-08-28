@@ -1,0 +1,7 @@
+#AT to create an invalid vm disk host file system
+runLitpScript deployment_11387.atlib
+
+litp update -p /ms/services/fmmed2/vm_disks/data -o host_volume_group=vg2 host_file_system=non-existing mount_point=/mnt/data
+
+assertError --err_type ValidationError --err_message 'Create plan failed: The file-system "vg2/non-existing" is undefined for storage profile on management server.' create_plan
+

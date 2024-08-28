@@ -1,0 +1,26 @@
+runLitpScript common_setup.atlib
+runLitpScript basic_deployment.atlib
+
+add-plugins yum_query_mock
+addMockDirectory /var/www/html/enma/ enma/
+addMockDirectory /var/www/html/enmb/ enmb/
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed2 -o service_name=fmmed2 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+
+litp create -t vm-yum-repo -p /software/services/fmmed1/vm_yum_repos/a -o name=enm_a  base_url="http://ms/enma"
+litp create -t vm-yum-repo -p /software/services/fmmed2/vm_yum_repos/a -o name=enm_b  base_url="http://ms/enmb"
+
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1
+litp inherit -s /software/services/fmmed2 -p /deployments/test/clusters/cluster1/nodes/node_2/services/fmmed2
+
+litp create -t vm-alias   -p /software/services/fmmed1/vm_aliases/ms -o alias_names=ms address=10.10.10.100
+litp create -t vm-alias   -p /software/services/fmmed2/vm_aliases/ms -o alias_names=ms address=10.10.10.100
+
+litp create_plan
+
+# Model created
+assertProperty /software/services/fmmed1/vm_yum_repos/a -o name="enm_a" base_url="http://ms/enma"
+assertProperty /software/services/fmmed2/vm_yum_repos/a -o name="enm_b"  base_url="http://ms/enmb"

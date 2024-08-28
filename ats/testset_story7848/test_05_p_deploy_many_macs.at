@@ -1,0 +1,868 @@
+runLitpScript ../basic_deployment_with_bridge.atlib
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+litp create -t vm-service -p /software/services/service10 -o service_name="service10" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs10 -o name=cs10 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service10 -p /deployments/test/clusters/cluster1/services/cs10/applications/service10
+litp create -t vm-network-interface -p /software/services/service10/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1/64,2001:f0d0:1884:200c::2/64"
+litp create -t vm-network-interface -p /software/services/service10/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::3/64,2001:f0d0:1884:200c::4/64"
+litp create -t vm-network-interface -p /software/services/service10/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::5/64,2001:f0d0:1884:200c::6/64"
+
+litp create -t vm-service -p /software/services/service11 -o service_name="service11" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs11 -o name=cs11 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service11 -p /deployments/test/clusters/cluster1/services/cs11/applications/service11
+litp create -t vm-network-interface -p /software/services/service11/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::7/64,2001:f0d0:1884:200c::8/64"
+litp create -t vm-network-interface -p /software/services/service11/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::9/64,2001:f0d0:1884:200c::a/64"
+litp create -t vm-network-interface -p /software/services/service11/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::b/64,2001:f0d0:1884:200c::c/64"
+litp create -t vm-network-interface -p /software/services/service11/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::d/64,2001:f0d0:1884:200c::e/64"
+
+litp create -t vm-service -p /software/services/service12 -o service_name="service12" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs12 -o name=cs12 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service12 -p /deployments/test/clusters/cluster1/services/cs12/applications/service12
+litp create -t vm-network-interface -p /software/services/service12/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::f/64,2001:f0d0:1884:200c::10/64"
+litp create -t vm-network-interface -p /software/services/service12/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::11/64,2001:f0d0:1884:200c::12/64"
+litp create -t vm-network-interface -p /software/services/service12/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::13/64,2001:f0d0:1884:200c::14/64"
+litp create -t vm-network-interface -p /software/services/service12/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::15/64,2001:f0d0:1884:200c::16/64"
+litp create -t vm-network-interface -p /software/services/service12/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::17/64,2001:f0d0:1884:200c::18/64"
+
+litp create -t vm-service -p /software/services/service13 -o service_name="service13" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs13 -o name=cs13 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service13 -p /deployments/test/clusters/cluster1/services/cs13/applications/service13
+litp create -t vm-network-interface -p /software/services/service13/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::19/64,2001:f0d0:1884:200c::1a/64"
+litp create -t vm-network-interface -p /software/services/service13/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1b/64,2001:f0d0:1884:200c::1c/64"
+litp create -t vm-network-interface -p /software/services/service13/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1d/64,2001:f0d0:1884:200c::1e/64"
+litp create -t vm-network-interface -p /software/services/service13/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1f/64,2001:f0d0:1884:200c::20/64"
+litp create -t vm-network-interface -p /software/services/service13/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::21/64,2001:f0d0:1884:200c::22/64"
+litp create -t vm-network-interface -p /software/services/service13/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::23/64,2001:f0d0:1884:200c::24/64"
+
+litp create -t vm-service -p /software/services/service14 -o service_name="service14" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs14 -o name=cs14 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service14 -p /deployments/test/clusters/cluster1/services/cs14/applications/service14
+litp create -t vm-network-interface -p /software/services/service14/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::25/64,2001:f0d0:1884:200c::26/64"
+litp create -t vm-network-interface -p /software/services/service14/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::27/64,2001:f0d0:1884:200c::28/64"
+litp create -t vm-network-interface -p /software/services/service14/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::29/64,2001:f0d0:1884:200c::2a/64"
+litp create -t vm-network-interface -p /software/services/service14/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2b/64,2001:f0d0:1884:200c::2c/64"
+litp create -t vm-network-interface -p /software/services/service14/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2d/64,2001:f0d0:1884:200c::2e/64"
+litp create -t vm-network-interface -p /software/services/service14/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2f/64,2001:f0d0:1884:200c::30/64"
+litp create -t vm-network-interface -p /software/services/service14/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::31/64,2001:f0d0:1884:200c::32/64"
+
+litp create -t vm-service -p /software/services/service15 -o service_name="service15" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs15 -o name=cs15 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service15 -p /deployments/test/clusters/cluster1/services/cs15/applications/service15
+litp create -t vm-network-interface -p /software/services/service15/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::33/64,2001:f0d0:1884:200c::34/64"
+litp create -t vm-network-interface -p /software/services/service15/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::35/64,2001:f0d0:1884:200c::36/64"
+litp create -t vm-network-interface -p /software/services/service15/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::37/64,2001:f0d0:1884:200c::38/64"
+litp create -t vm-network-interface -p /software/services/service15/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::39/64,2001:f0d0:1884:200c::3a/64"
+litp create -t vm-network-interface -p /software/services/service15/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::3b/64,2001:f0d0:1884:200c::3c/64"
+litp create -t vm-network-interface -p /software/services/service15/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::3d/64,2001:f0d0:1884:200c::3e/64"
+litp create -t vm-network-interface -p /software/services/service15/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::3f/64,2001:f0d0:1884:200c::40/64"
+litp create -t vm-network-interface -p /software/services/service15/vm_network_interfaces/iface7 -o network_name=mgmt device_name=eth7 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::41/64,2001:f0d0:1884:200c::42/64"
+
+litp create -t vm-service -p /software/services/service16 -o service_name="service16" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs16 -o name=cs16 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service16 -p /deployments/test/clusters/cluster1/services/cs16/applications/service16
+litp create -t vm-network-interface -p /software/services/service16/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::43/64,2001:f0d0:1884:200c::44/64"
+
+litp create -t vm-service -p /software/services/service17 -o service_name="service17" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs17 -o name=cs17 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service17 -p /deployments/test/clusters/cluster1/services/cs17/applications/service17
+litp create -t vm-network-interface -p /software/services/service17/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::45/64,2001:f0d0:1884:200c::46/64"
+litp create -t vm-network-interface -p /software/services/service17/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::47/64,2001:f0d0:1884:200c::48/64"
+
+litp create -t vm-service -p /software/services/service18 -o service_name="service18" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs18 -o name=cs18 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service18 -p /deployments/test/clusters/cluster1/services/cs18/applications/service18
+litp create -t vm-network-interface -p /software/services/service18/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::49/64,2001:f0d0:1884:200c::4a/64"
+litp create -t vm-network-interface -p /software/services/service18/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::4b/64,2001:f0d0:1884:200c::4c/64"
+litp create -t vm-network-interface -p /software/services/service18/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::4d/64,2001:f0d0:1884:200c::4e/64"
+
+litp create -t vm-service -p /software/services/service19 -o service_name="service19" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs19 -o name=cs19 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service19 -p /deployments/test/clusters/cluster1/services/cs19/applications/service19
+litp create -t vm-network-interface -p /software/services/service19/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::4f/64,2001:f0d0:1884:200c::50/64"
+litp create -t vm-network-interface -p /software/services/service19/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::51/64,2001:f0d0:1884:200c::52/64"
+litp create -t vm-network-interface -p /software/services/service19/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::53/64,2001:f0d0:1884:200c::54/64"
+litp create -t vm-network-interface -p /software/services/service19/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::55/64,2001:f0d0:1884:200c::56/64"
+
+litp create -t vm-service -p /software/services/service20 -o service_name="service20" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs20 -o name=cs20 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service20 -p /deployments/test/clusters/cluster1/services/cs20/applications/service20
+litp create -t vm-network-interface -p /software/services/service20/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::57/64,2001:f0d0:1884:200c::58/64"
+litp create -t vm-network-interface -p /software/services/service20/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::59/64,2001:f0d0:1884:200c::5a/64"
+litp create -t vm-network-interface -p /software/services/service20/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::5b/64,2001:f0d0:1884:200c::5c/64"
+litp create -t vm-network-interface -p /software/services/service20/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::5d/64,2001:f0d0:1884:200c::5e/64"
+litp create -t vm-network-interface -p /software/services/service20/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::5f/64,2001:f0d0:1884:200c::60/64"
+
+litp create -t vm-service -p /software/services/service21 -o service_name="service21" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs21 -o name=cs21 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service21 -p /deployments/test/clusters/cluster1/services/cs21/applications/service21
+litp create -t vm-network-interface -p /software/services/service21/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::61/64,2001:f0d0:1884:200c::62/64"
+litp create -t vm-network-interface -p /software/services/service21/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::63/64,2001:f0d0:1884:200c::64/64"
+litp create -t vm-network-interface -p /software/services/service21/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::65/64,2001:f0d0:1884:200c::66/64"
+litp create -t vm-network-interface -p /software/services/service21/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::67/64,2001:f0d0:1884:200c::68/64"
+litp create -t vm-network-interface -p /software/services/service21/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::69/64,2001:f0d0:1884:200c::6a/64"
+litp create -t vm-network-interface -p /software/services/service21/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::6b/64,2001:f0d0:1884:200c::6c/64"
+
+litp create -t vm-service -p /software/services/service22 -o service_name="service22" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs22 -o name=cs22 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service22 -p /deployments/test/clusters/cluster1/services/cs22/applications/service22
+litp create -t vm-network-interface -p /software/services/service22/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::6d/64,2001:f0d0:1884:200c::6e/64"
+litp create -t vm-network-interface -p /software/services/service22/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::6f/64,2001:f0d0:1884:200c::70/64"
+litp create -t vm-network-interface -p /software/services/service22/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::71/64,2001:f0d0:1884:200c::72/64"
+litp create -t vm-network-interface -p /software/services/service22/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::73/64,2001:f0d0:1884:200c::74/64"
+litp create -t vm-network-interface -p /software/services/service22/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::75/64,2001:f0d0:1884:200c::76/64"
+litp create -t vm-network-interface -p /software/services/service22/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::77/64,2001:f0d0:1884:200c::78/64"
+litp create -t vm-network-interface -p /software/services/service22/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::79/64,2001:f0d0:1884:200c::7a/64"
+
+litp create -t vm-service -p /software/services/service23 -o service_name="service23" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs23 -o name=cs23 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service23 -p /deployments/test/clusters/cluster1/services/cs23/applications/service23
+litp create -t vm-network-interface -p /software/services/service23/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::7b/64,2001:f0d0:1884:200c::7c/64"
+litp create -t vm-network-interface -p /software/services/service23/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::7d/64,2001:f0d0:1884:200c::7e/64"
+litp create -t vm-network-interface -p /software/services/service23/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::7f/64,2001:f0d0:1884:200c::80/64"
+litp create -t vm-network-interface -p /software/services/service23/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::81/64,2001:f0d0:1884:200c::82/64"
+litp create -t vm-network-interface -p /software/services/service23/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::83/64,2001:f0d0:1884:200c::84/64"
+litp create -t vm-network-interface -p /software/services/service23/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::85/64,2001:f0d0:1884:200c::86/64"
+litp create -t vm-network-interface -p /software/services/service23/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::87/64,2001:f0d0:1884:200c::88/64"
+litp create -t vm-network-interface -p /software/services/service23/vm_network_interfaces/iface7 -o network_name=mgmt device_name=eth7 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::89/64,2001:f0d0:1884:200c::8a/64"
+
+litp create -t vm-service -p /software/services/service24 -o service_name="service24" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs24 -o name=cs24 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service24 -p /deployments/test/clusters/cluster1/services/cs24/applications/service24
+litp create -t vm-network-interface -p /software/services/service24/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::8b/64,2001:f0d0:1884:200c::8c/64"
+
+litp create -t vm-service -p /software/services/service25 -o service_name="service25" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs25 -o name=cs25 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service25 -p /deployments/test/clusters/cluster1/services/cs25/applications/service25
+litp create -t vm-network-interface -p /software/services/service25/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::8d/64,2001:f0d0:1884:200c::8e/64"
+litp create -t vm-network-interface -p /software/services/service25/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::8f/64,2001:f0d0:1884:200c::90/64"
+
+litp create -t vm-service -p /software/services/service26 -o service_name="service26" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs26 -o name=cs26 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service26 -p /deployments/test/clusters/cluster1/services/cs26/applications/service26
+litp create -t vm-network-interface -p /software/services/service26/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::91/64,2001:f0d0:1884:200c::92/64"
+litp create -t vm-network-interface -p /software/services/service26/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::93/64,2001:f0d0:1884:200c::94/64"
+litp create -t vm-network-interface -p /software/services/service26/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::95/64,2001:f0d0:1884:200c::96/64"
+
+litp create -t vm-service -p /software/services/service27 -o service_name="service27" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs27 -o name=cs27 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service27 -p /deployments/test/clusters/cluster1/services/cs27/applications/service27
+litp create -t vm-network-interface -p /software/services/service27/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::97/64,2001:f0d0:1884:200c::98/64"
+litp create -t vm-network-interface -p /software/services/service27/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::99/64,2001:f0d0:1884:200c::9a/64"
+litp create -t vm-network-interface -p /software/services/service27/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::9b/64,2001:f0d0:1884:200c::9c/64"
+litp create -t vm-network-interface -p /software/services/service27/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::9d/64,2001:f0d0:1884:200c::9e/64"
+
+litp create -t vm-service -p /software/services/service28 -o service_name="service28" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs28 -o name=cs28 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service28 -p /deployments/test/clusters/cluster1/services/cs28/applications/service28
+litp create -t vm-network-interface -p /software/services/service28/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::9f/64,2001:f0d0:1884:200c::a0/64"
+litp create -t vm-network-interface -p /software/services/service28/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::a1/64,2001:f0d0:1884:200c::a2/64"
+litp create -t vm-network-interface -p /software/services/service28/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::a3/64,2001:f0d0:1884:200c::a4/64"
+litp create -t vm-network-interface -p /software/services/service28/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::a5/64,2001:f0d0:1884:200c::a6/64"
+litp create -t vm-network-interface -p /software/services/service28/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::a7/64,2001:f0d0:1884:200c::a8/64"
+
+litp create -t vm-service -p /software/services/service29 -o service_name="service29" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs29 -o name=cs29 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service29 -p /deployments/test/clusters/cluster1/services/cs29/applications/service29
+litp create -t vm-network-interface -p /software/services/service29/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::a9/64,2001:f0d0:1884:200c::aa/64"
+litp create -t vm-network-interface -p /software/services/service29/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::ab/64,2001:f0d0:1884:200c::ac/64"
+litp create -t vm-network-interface -p /software/services/service29/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::ad/64,2001:f0d0:1884:200c::ae/64"
+litp create -t vm-network-interface -p /software/services/service29/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::af/64,2001:f0d0:1884:200c::b0/64"
+litp create -t vm-network-interface -p /software/services/service29/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::b1/64,2001:f0d0:1884:200c::b2/64"
+litp create -t vm-network-interface -p /software/services/service29/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::b3/64,2001:f0d0:1884:200c::b4/64"
+
+litp create -t vm-service -p /software/services/service30 -o service_name="service30" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs30 -o name=cs30 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service30 -p /deployments/test/clusters/cluster1/services/cs30/applications/service30
+litp create -t vm-network-interface -p /software/services/service30/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::b5/64,2001:f0d0:1884:200c::b6/64"
+litp create -t vm-network-interface -p /software/services/service30/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::b7/64,2001:f0d0:1884:200c::b8/64"
+litp create -t vm-network-interface -p /software/services/service30/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::b9/64,2001:f0d0:1884:200c::ba/64"
+litp create -t vm-network-interface -p /software/services/service30/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::bb/64,2001:f0d0:1884:200c::bc/64"
+litp create -t vm-network-interface -p /software/services/service30/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::bd/64,2001:f0d0:1884:200c::be/64"
+litp create -t vm-network-interface -p /software/services/service30/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::bf/64,2001:f0d0:1884:200c::c0/64"
+litp create -t vm-network-interface -p /software/services/service30/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::c1/64,2001:f0d0:1884:200c::c2/64"
+
+litp create -t vm-service -p /software/services/service31 -o service_name="service31" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs31 -o name=cs31 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service31 -p /deployments/test/clusters/cluster1/services/cs31/applications/service31
+litp create -t vm-network-interface -p /software/services/service31/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::c3/64,2001:f0d0:1884:200c::c4/64"
+litp create -t vm-network-interface -p /software/services/service31/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::c5/64,2001:f0d0:1884:200c::c6/64"
+litp create -t vm-network-interface -p /software/services/service31/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::c7/64,2001:f0d0:1884:200c::c8/64"
+litp create -t vm-network-interface -p /software/services/service31/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::c9/64,2001:f0d0:1884:200c::ca/64"
+litp create -t vm-network-interface -p /software/services/service31/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::cb/64,2001:f0d0:1884:200c::cc/64"
+litp create -t vm-network-interface -p /software/services/service31/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::cd/64,2001:f0d0:1884:200c::ce/64"
+litp create -t vm-network-interface -p /software/services/service31/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::cf/64,2001:f0d0:1884:200c::d0/64"
+litp create -t vm-network-interface -p /software/services/service31/vm_network_interfaces/iface7 -o network_name=mgmt device_name=eth7 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::d1/64,2001:f0d0:1884:200c::d2/64"
+
+litp create -t vm-service -p /software/services/service32 -o service_name="service32" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs32 -o name=cs32 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service32 -p /deployments/test/clusters/cluster1/services/cs32/applications/service32
+litp create -t vm-network-interface -p /software/services/service32/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::d3/64,2001:f0d0:1884:200c::d4/64"
+
+litp create -t vm-service -p /software/services/service33 -o service_name="service33" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs33 -o name=cs33 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service33 -p /deployments/test/clusters/cluster1/services/cs33/applications/service33
+litp create -t vm-network-interface -p /software/services/service33/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::d5/64,2001:f0d0:1884:200c::d6/64"
+litp create -t vm-network-interface -p /software/services/service33/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::d7/64,2001:f0d0:1884:200c::d8/64"
+
+litp create -t vm-service -p /software/services/service34 -o service_name="service34" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs34 -o name=cs34 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service34 -p /deployments/test/clusters/cluster1/services/cs34/applications/service34
+litp create -t vm-network-interface -p /software/services/service34/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::d9/64,2001:f0d0:1884:200c::da/64"
+litp create -t vm-network-interface -p /software/services/service34/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::db/64,2001:f0d0:1884:200c::dc/64"
+litp create -t vm-network-interface -p /software/services/service34/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::dd/64,2001:f0d0:1884:200c::de/64"
+
+litp create -t vm-service -p /software/services/service35 -o service_name="service35" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs35 -o name=cs35 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service35 -p /deployments/test/clusters/cluster1/services/cs35/applications/service35
+litp create -t vm-network-interface -p /software/services/service35/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::df/64,2001:f0d0:1884:200c::e0/64"
+litp create -t vm-network-interface -p /software/services/service35/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::e1/64,2001:f0d0:1884:200c::e2/64"
+litp create -t vm-network-interface -p /software/services/service35/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::e3/64,2001:f0d0:1884:200c::e4/64"
+litp create -t vm-network-interface -p /software/services/service35/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::e5/64,2001:f0d0:1884:200c::e6/64"
+
+litp create -t vm-service -p /software/services/service36 -o service_name="service36" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs36 -o name=cs36 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service36 -p /deployments/test/clusters/cluster1/services/cs36/applications/service36
+litp create -t vm-network-interface -p /software/services/service36/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::e7/64,2001:f0d0:1884:200c::e8/64"
+litp create -t vm-network-interface -p /software/services/service36/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::e9/64,2001:f0d0:1884:200c::ea/64"
+litp create -t vm-network-interface -p /software/services/service36/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::eb/64,2001:f0d0:1884:200c::ec/64"
+litp create -t vm-network-interface -p /software/services/service36/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::ed/64,2001:f0d0:1884:200c::ee/64"
+litp create -t vm-network-interface -p /software/services/service36/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::ef/64,2001:f0d0:1884:200c::f0/64"
+
+litp create -t vm-service -p /software/services/service37 -o service_name="service37" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs37 -o name=cs37 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service37 -p /deployments/test/clusters/cluster1/services/cs37/applications/service37
+litp create -t vm-network-interface -p /software/services/service37/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::f1/64,2001:f0d0:1884:200c::f2/64"
+litp create -t vm-network-interface -p /software/services/service37/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::f3/64,2001:f0d0:1884:200c::f4/64"
+litp create -t vm-network-interface -p /software/services/service37/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::f5/64,2001:f0d0:1884:200c::f6/64"
+litp create -t vm-network-interface -p /software/services/service37/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::f7/64,2001:f0d0:1884:200c::f8/64"
+litp create -t vm-network-interface -p /software/services/service37/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::f9/64,2001:f0d0:1884:200c::fa/64"
+litp create -t vm-network-interface -p /software/services/service37/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::fb/64,2001:f0d0:1884:200c::fc/64"
+
+litp create -t vm-service -p /software/services/service38 -o service_name="service38" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs38 -o name=cs38 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service38 -p /deployments/test/clusters/cluster1/services/cs38/applications/service38
+litp create -t vm-network-interface -p /software/services/service38/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::fd/64,2001:f0d0:1884:200c::fe/64"
+litp create -t vm-network-interface -p /software/services/service38/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::ff/64,2001:f0d0:1884:200c::100/64"
+litp create -t vm-network-interface -p /software/services/service38/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::101/64,2001:f0d0:1884:200c::102/64"
+litp create -t vm-network-interface -p /software/services/service38/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::103/64,2001:f0d0:1884:200c::104/64"
+litp create -t vm-network-interface -p /software/services/service38/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::105/64,2001:f0d0:1884:200c::106/64"
+litp create -t vm-network-interface -p /software/services/service38/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::107/64,2001:f0d0:1884:200c::108/64"
+litp create -t vm-network-interface -p /software/services/service38/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::109/64,2001:f0d0:1884:200c::10a/64"
+
+litp create -t vm-service -p /software/services/service39 -o service_name="service39" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs39 -o name=cs39 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service39 -p /deployments/test/clusters/cluster1/services/cs39/applications/service39
+litp create -t vm-network-interface -p /software/services/service39/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::10b/64,2001:f0d0:1884:200c::10c/64"
+litp create -t vm-network-interface -p /software/services/service39/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::10d/64,2001:f0d0:1884:200c::10e/64"
+litp create -t vm-network-interface -p /software/services/service39/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::10f/64,2001:f0d0:1884:200c::110/64"
+litp create -t vm-network-interface -p /software/services/service39/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::111/64,2001:f0d0:1884:200c::112/64"
+litp create -t vm-network-interface -p /software/services/service39/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::113/64,2001:f0d0:1884:200c::114/64"
+litp create -t vm-network-interface -p /software/services/service39/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::115/64,2001:f0d0:1884:200c::116/64"
+litp create -t vm-network-interface -p /software/services/service39/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::117/64,2001:f0d0:1884:200c::118/64"
+litp create -t vm-network-interface -p /software/services/service39/vm_network_interfaces/iface7 -o network_name=mgmt device_name=eth7 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::119/64,2001:f0d0:1884:200c::11a/64"
+
+litp create -t vm-service -p /software/services/service40 -o service_name="service40" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs40 -o name=cs40 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service40 -p /deployments/test/clusters/cluster1/services/cs40/applications/service40
+litp create -t vm-network-interface -p /software/services/service40/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::11b/64,2001:f0d0:1884:200c::11c/64"
+
+litp create -t vm-service -p /software/services/service41 -o service_name="service41" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs41 -o name=cs41 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service41 -p /deployments/test/clusters/cluster1/services/cs41/applications/service41
+litp create -t vm-network-interface -p /software/services/service41/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::11d/64,2001:f0d0:1884:200c::11e/64"
+litp create -t vm-network-interface -p /software/services/service41/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::11f/64,2001:f0d0:1884:200c::120/64"
+
+litp create -t vm-service -p /software/services/service42 -o service_name="service42" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs42 -o name=cs42 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service42 -p /deployments/test/clusters/cluster1/services/cs42/applications/service42
+litp create -t vm-network-interface -p /software/services/service42/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::121/64,2001:f0d0:1884:200c::122/64"
+litp create -t vm-network-interface -p /software/services/service42/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::123/64,2001:f0d0:1884:200c::124/64"
+litp create -t vm-network-interface -p /software/services/service42/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::125/64,2001:f0d0:1884:200c::126/64"
+
+litp create -t vm-service -p /software/services/service43 -o service_name="service43" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs43 -o name=cs43 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service43 -p /deployments/test/clusters/cluster1/services/cs43/applications/service43
+litp create -t vm-network-interface -p /software/services/service43/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::127/64,2001:f0d0:1884:200c::128/64"
+litp create -t vm-network-interface -p /software/services/service43/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::129/64,2001:f0d0:1884:200c::12a/64"
+litp create -t vm-network-interface -p /software/services/service43/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::12b/64,2001:f0d0:1884:200c::12c/64"
+litp create -t vm-network-interface -p /software/services/service43/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::12d/64,2001:f0d0:1884:200c::12e/64"
+
+litp create -t vm-service -p /software/services/service44 -o service_name="service44" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs44 -o name=cs44 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service44 -p /deployments/test/clusters/cluster1/services/cs44/applications/service44
+litp create -t vm-network-interface -p /software/services/service44/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::12f/64,2001:f0d0:1884:200c::130/64"
+litp create -t vm-network-interface -p /software/services/service44/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::131/64,2001:f0d0:1884:200c::132/64"
+litp create -t vm-network-interface -p /software/services/service44/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::133/64,2001:f0d0:1884:200c::134/64"
+litp create -t vm-network-interface -p /software/services/service44/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::135/64,2001:f0d0:1884:200c::136/64"
+litp create -t vm-network-interface -p /software/services/service44/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::137/64,2001:f0d0:1884:200c::138/64"
+
+litp create -t vm-service -p /software/services/service45 -o service_name="service45" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs45 -o name=cs45 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service45 -p /deployments/test/clusters/cluster1/services/cs45/applications/service45
+litp create -t vm-network-interface -p /software/services/service45/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::139/64,2001:f0d0:1884:200c::13a/64"
+litp create -t vm-network-interface -p /software/services/service45/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::13b/64,2001:f0d0:1884:200c::13c/64"
+litp create -t vm-network-interface -p /software/services/service45/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::13d/64,2001:f0d0:1884:200c::13e/64"
+litp create -t vm-network-interface -p /software/services/service45/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::13f/64,2001:f0d0:1884:200c::140/64"
+litp create -t vm-network-interface -p /software/services/service45/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::141/64,2001:f0d0:1884:200c::142/64"
+litp create -t vm-network-interface -p /software/services/service45/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::143/64,2001:f0d0:1884:200c::144/64"
+
+litp create -t vm-service -p /software/services/service46 -o service_name="service46" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs46 -o name=cs46 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service46 -p /deployments/test/clusters/cluster1/services/cs46/applications/service46
+litp create -t vm-network-interface -p /software/services/service46/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::145/64,2001:f0d0:1884:200c::146/64"
+litp create -t vm-network-interface -p /software/services/service46/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::147/64,2001:f0d0:1884:200c::148/64"
+litp create -t vm-network-interface -p /software/services/service46/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::149/64,2001:f0d0:1884:200c::14a/64"
+litp create -t vm-network-interface -p /software/services/service46/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::14b/64,2001:f0d0:1884:200c::14c/64"
+litp create -t vm-network-interface -p /software/services/service46/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::14d/64,2001:f0d0:1884:200c::14e/64"
+litp create -t vm-network-interface -p /software/services/service46/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::14f/64,2001:f0d0:1884:200c::150/64"
+litp create -t vm-network-interface -p /software/services/service46/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::151/64,2001:f0d0:1884:200c::152/64"
+
+litp create -t vm-service -p /software/services/service47 -o service_name="service47" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs47 -o name=cs47 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service47 -p /deployments/test/clusters/cluster1/services/cs47/applications/service47
+litp create -t vm-network-interface -p /software/services/service47/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::153/64,2001:f0d0:1884:200c::154/64"
+litp create -t vm-network-interface -p /software/services/service47/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::155/64,2001:f0d0:1884:200c::156/64"
+litp create -t vm-network-interface -p /software/services/service47/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::157/64,2001:f0d0:1884:200c::158/64"
+litp create -t vm-network-interface -p /software/services/service47/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::159/64,2001:f0d0:1884:200c::15a/64"
+litp create -t vm-network-interface -p /software/services/service47/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::15b/64,2001:f0d0:1884:200c::15c/64"
+litp create -t vm-network-interface -p /software/services/service47/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::15d/64,2001:f0d0:1884:200c::15e/64"
+litp create -t vm-network-interface -p /software/services/service47/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::15f/64,2001:f0d0:1884:200c::160/64"
+litp create -t vm-network-interface -p /software/services/service47/vm_network_interfaces/iface7 -o network_name=mgmt device_name=eth7 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::161/64,2001:f0d0:1884:200c::162/64"
+
+litp create -t vm-service -p /software/services/service48 -o service_name="service48" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs48 -o name=cs48 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service48 -p /deployments/test/clusters/cluster1/services/cs48/applications/service48
+litp create -t vm-network-interface -p /software/services/service48/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::163/64,2001:f0d0:1884:200c::164/64"
+
+litp create -t vm-service -p /software/services/service49 -o service_name="service49" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs49 -o name=cs49 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service49 -p /deployments/test/clusters/cluster1/services/cs49/applications/service49
+litp create -t vm-network-interface -p /software/services/service49/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::165/64,2001:f0d0:1884:200c::166/64"
+litp create -t vm-network-interface -p /software/services/service49/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::167/64,2001:f0d0:1884:200c::168/64"
+
+litp create -t vm-service -p /software/services/service50 -o service_name="service50" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs50 -o name=cs50 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service50 -p /deployments/test/clusters/cluster1/services/cs50/applications/service50
+litp create -t vm-network-interface -p /software/services/service50/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::169/64,2001:f0d0:1884:200c::16a/64"
+litp create -t vm-network-interface -p /software/services/service50/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::16b/64,2001:f0d0:1884:200c::16c/64"
+litp create -t vm-network-interface -p /software/services/service50/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::16d/64,2001:f0d0:1884:200c::16e/64"
+
+litp create -t vm-service -p /software/services/service51 -o service_name="service51" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs51 -o name=cs51 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service51 -p /deployments/test/clusters/cluster1/services/cs51/applications/service51
+litp create -t vm-network-interface -p /software/services/service51/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::16f/64,2001:f0d0:1884:200c::170/64"
+litp create -t vm-network-interface -p /software/services/service51/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::171/64,2001:f0d0:1884:200c::172/64"
+litp create -t vm-network-interface -p /software/services/service51/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::173/64,2001:f0d0:1884:200c::174/64"
+litp create -t vm-network-interface -p /software/services/service51/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::175/64,2001:f0d0:1884:200c::176/64"
+
+litp create -t vm-service -p /software/services/service52 -o service_name="service52" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs52 -o name=cs52 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service52 -p /deployments/test/clusters/cluster1/services/cs52/applications/service52
+litp create -t vm-network-interface -p /software/services/service52/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::177/64,2001:f0d0:1884:200c::178/64"
+litp create -t vm-network-interface -p /software/services/service52/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::179/64,2001:f0d0:1884:200c::17a/64"
+litp create -t vm-network-interface -p /software/services/service52/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::17b/64,2001:f0d0:1884:200c::17c/64"
+litp create -t vm-network-interface -p /software/services/service52/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::17d/64,2001:f0d0:1884:200c::17e/64"
+litp create -t vm-network-interface -p /software/services/service52/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::17f/64,2001:f0d0:1884:200c::180/64"
+
+litp create -t vm-service -p /software/services/service53 -o service_name="service53" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs53 -o name=cs53 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service53 -p /deployments/test/clusters/cluster1/services/cs53/applications/service53
+litp create -t vm-network-interface -p /software/services/service53/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::181/64,2001:f0d0:1884:200c::182/64"
+litp create -t vm-network-interface -p /software/services/service53/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::183/64,2001:f0d0:1884:200c::184/64"
+litp create -t vm-network-interface -p /software/services/service53/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::185/64,2001:f0d0:1884:200c::186/64"
+litp create -t vm-network-interface -p /software/services/service53/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::187/64,2001:f0d0:1884:200c::188/64"
+litp create -t vm-network-interface -p /software/services/service53/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::189/64,2001:f0d0:1884:200c::18a/64"
+litp create -t vm-network-interface -p /software/services/service53/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::18b/64,2001:f0d0:1884:200c::18c/64"
+
+litp create -t vm-service -p /software/services/service54 -o service_name="service54" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs54 -o name=cs54 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service54 -p /deployments/test/clusters/cluster1/services/cs54/applications/service54
+litp create -t vm-network-interface -p /software/services/service54/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::18d/64,2001:f0d0:1884:200c::18e/64"
+litp create -t vm-network-interface -p /software/services/service54/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::18f/64,2001:f0d0:1884:200c::190/64"
+litp create -t vm-network-interface -p /software/services/service54/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::191/64,2001:f0d0:1884:200c::192/64"
+litp create -t vm-network-interface -p /software/services/service54/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::193/64,2001:f0d0:1884:200c::194/64"
+litp create -t vm-network-interface -p /software/services/service54/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::195/64,2001:f0d0:1884:200c::196/64"
+litp create -t vm-network-interface -p /software/services/service54/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::197/64,2001:f0d0:1884:200c::198/64"
+litp create -t vm-network-interface -p /software/services/service54/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::199/64,2001:f0d0:1884:200c::19a/64"
+
+litp create -t vm-service -p /software/services/service55 -o service_name="service55" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs55 -o name=cs55 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service55 -p /deployments/test/clusters/cluster1/services/cs55/applications/service55
+litp create -t vm-network-interface -p /software/services/service55/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::19b/64,2001:f0d0:1884:200c::19c/64"
+litp create -t vm-network-interface -p /software/services/service55/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::19d/64,2001:f0d0:1884:200c::19e/64"
+litp create -t vm-network-interface -p /software/services/service55/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::19f/64,2001:f0d0:1884:200c::1a0/64"
+litp create -t vm-network-interface -p /software/services/service55/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1a1/64,2001:f0d0:1884:200c::1a2/64"
+litp create -t vm-network-interface -p /software/services/service55/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1a3/64,2001:f0d0:1884:200c::1a4/64"
+litp create -t vm-network-interface -p /software/services/service55/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1a5/64,2001:f0d0:1884:200c::1a6/64"
+litp create -t vm-network-interface -p /software/services/service55/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1a7/64,2001:f0d0:1884:200c::1a8/64"
+litp create -t vm-network-interface -p /software/services/service55/vm_network_interfaces/iface7 -o network_name=mgmt device_name=eth7 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1a9/64,2001:f0d0:1884:200c::1aa/64"
+
+litp create -t vm-service -p /software/services/service56 -o service_name="service56" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs56 -o name=cs56 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service56 -p /deployments/test/clusters/cluster1/services/cs56/applications/service56
+litp create -t vm-network-interface -p /software/services/service56/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1ab/64,2001:f0d0:1884:200c::1ac/64"
+
+litp create -t vm-service -p /software/services/service57 -o service_name="service57" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs57 -o name=cs57 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service57 -p /deployments/test/clusters/cluster1/services/cs57/applications/service57
+litp create -t vm-network-interface -p /software/services/service57/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1ad/64,2001:f0d0:1884:200c::1ae/64"
+litp create -t vm-network-interface -p /software/services/service57/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1af/64,2001:f0d0:1884:200c::1b0/64"
+
+litp create -t vm-service -p /software/services/service58 -o service_name="service58" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs58 -o name=cs58 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service58 -p /deployments/test/clusters/cluster1/services/cs58/applications/service58
+litp create -t vm-network-interface -p /software/services/service58/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1b1/64,2001:f0d0:1884:200c::1b2/64"
+litp create -t vm-network-interface -p /software/services/service58/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1b3/64,2001:f0d0:1884:200c::1b4/64"
+litp create -t vm-network-interface -p /software/services/service58/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1b5/64,2001:f0d0:1884:200c::1b6/64"
+
+litp create -t vm-service -p /software/services/service59 -o service_name="service59" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs59 -o name=cs59 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service59 -p /deployments/test/clusters/cluster1/services/cs59/applications/service59
+litp create -t vm-network-interface -p /software/services/service59/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1b7/64,2001:f0d0:1884:200c::1b8/64"
+litp create -t vm-network-interface -p /software/services/service59/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1b9/64,2001:f0d0:1884:200c::1ba/64"
+litp create -t vm-network-interface -p /software/services/service59/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1bb/64,2001:f0d0:1884:200c::1bc/64"
+litp create -t vm-network-interface -p /software/services/service59/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1bd/64,2001:f0d0:1884:200c::1be/64"
+
+litp create -t vm-service -p /software/services/service60 -o service_name="service60" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs60 -o name=cs60 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service60 -p /deployments/test/clusters/cluster1/services/cs60/applications/service60
+litp create -t vm-network-interface -p /software/services/service60/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1bf/64,2001:f0d0:1884:200c::1c0/64"
+litp create -t vm-network-interface -p /software/services/service60/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1c1/64,2001:f0d0:1884:200c::1c2/64"
+litp create -t vm-network-interface -p /software/services/service60/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1c3/64,2001:f0d0:1884:200c::1c4/64"
+litp create -t vm-network-interface -p /software/services/service60/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1c5/64,2001:f0d0:1884:200c::1c6/64"
+litp create -t vm-network-interface -p /software/services/service60/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1c7/64,2001:f0d0:1884:200c::1c8/64"
+
+litp create -t vm-service -p /software/services/service61 -o service_name="service61" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs61 -o name=cs61 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service61 -p /deployments/test/clusters/cluster1/services/cs61/applications/service61
+litp create -t vm-network-interface -p /software/services/service61/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1c9/64,2001:f0d0:1884:200c::1ca/64"
+litp create -t vm-network-interface -p /software/services/service61/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1cb/64,2001:f0d0:1884:200c::1cc/64"
+litp create -t vm-network-interface -p /software/services/service61/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1cd/64,2001:f0d0:1884:200c::1ce/64"
+litp create -t vm-network-interface -p /software/services/service61/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1cf/64,2001:f0d0:1884:200c::1d0/64"
+litp create -t vm-network-interface -p /software/services/service61/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1d1/64,2001:f0d0:1884:200c::1d2/64"
+litp create -t vm-network-interface -p /software/services/service61/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1d3/64,2001:f0d0:1884:200c::1d4/64"
+
+litp create -t vm-service -p /software/services/service62 -o service_name="service62" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs62 -o name=cs62 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service62 -p /deployments/test/clusters/cluster1/services/cs62/applications/service62
+litp create -t vm-network-interface -p /software/services/service62/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1d5/64,2001:f0d0:1884:200c::1d6/64"
+litp create -t vm-network-interface -p /software/services/service62/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1d7/64,2001:f0d0:1884:200c::1d8/64"
+litp create -t vm-network-interface -p /software/services/service62/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1d9/64,2001:f0d0:1884:200c::1da/64"
+litp create -t vm-network-interface -p /software/services/service62/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1db/64,2001:f0d0:1884:200c::1dc/64"
+litp create -t vm-network-interface -p /software/services/service62/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1dd/64,2001:f0d0:1884:200c::1de/64"
+litp create -t vm-network-interface -p /software/services/service62/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1df/64,2001:f0d0:1884:200c::1e0/64"
+litp create -t vm-network-interface -p /software/services/service62/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1e1/64,2001:f0d0:1884:200c::1e2/64"
+
+litp create -t vm-service -p /software/services/service63 -o service_name="service63" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs63 -o name=cs63 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service63 -p /deployments/test/clusters/cluster1/services/cs63/applications/service63
+litp create -t vm-network-interface -p /software/services/service63/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1e3/64,2001:f0d0:1884:200c::1e4/64"
+litp create -t vm-network-interface -p /software/services/service63/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1e5/64,2001:f0d0:1884:200c::1e6/64"
+litp create -t vm-network-interface -p /software/services/service63/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1e7/64,2001:f0d0:1884:200c::1e8/64"
+litp create -t vm-network-interface -p /software/services/service63/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1e9/64,2001:f0d0:1884:200c::1ea/64"
+litp create -t vm-network-interface -p /software/services/service63/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1eb/64,2001:f0d0:1884:200c::1ec/64"
+litp create -t vm-network-interface -p /software/services/service63/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1ed/64,2001:f0d0:1884:200c::1ee/64"
+litp create -t vm-network-interface -p /software/services/service63/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1ef/64,2001:f0d0:1884:200c::1f0/64"
+litp create -t vm-network-interface -p /software/services/service63/vm_network_interfaces/iface7 -o network_name=mgmt device_name=eth7 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1f1/64,2001:f0d0:1884:200c::1f2/64"
+
+litp create -t vm-service -p /software/services/service64 -o service_name="service64" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs64 -o name=cs64 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service64 -p /deployments/test/clusters/cluster1/services/cs64/applications/service64
+litp create -t vm-network-interface -p /software/services/service64/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1f3/64,2001:f0d0:1884:200c::1f4/64"
+
+litp create -t vm-service -p /software/services/service65 -o service_name="service65" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs65 -o name=cs65 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service65 -p /deployments/test/clusters/cluster1/services/cs65/applications/service65
+litp create -t vm-network-interface -p /software/services/service65/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1f5/64,2001:f0d0:1884:200c::1f6/64"
+litp create -t vm-network-interface -p /software/services/service65/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1f7/64,2001:f0d0:1884:200c::1f8/64"
+
+litp create -t vm-service -p /software/services/service66 -o service_name="service66" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs66 -o name=cs66 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service66 -p /deployments/test/clusters/cluster1/services/cs66/applications/service66
+litp create -t vm-network-interface -p /software/services/service66/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1f9/64,2001:f0d0:1884:200c::1fa/64"
+litp create -t vm-network-interface -p /software/services/service66/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1fb/64,2001:f0d0:1884:200c::1fc/64"
+litp create -t vm-network-interface -p /software/services/service66/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1fd/64,2001:f0d0:1884:200c::1fe/64"
+
+litp create -t vm-service -p /software/services/service67 -o service_name="service67" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs67 -o name=cs67 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service67 -p /deployments/test/clusters/cluster1/services/cs67/applications/service67
+litp create -t vm-network-interface -p /software/services/service67/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::1ff/64,2001:f0d0:1884:200c::200/64"
+litp create -t vm-network-interface -p /software/services/service67/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::201/64,2001:f0d0:1884:200c::202/64"
+litp create -t vm-network-interface -p /software/services/service67/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::203/64,2001:f0d0:1884:200c::204/64"
+litp create -t vm-network-interface -p /software/services/service67/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::205/64,2001:f0d0:1884:200c::206/64"
+
+litp create -t vm-service -p /software/services/service68 -o service_name="service68" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs68 -o name=cs68 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service68 -p /deployments/test/clusters/cluster1/services/cs68/applications/service68
+litp create -t vm-network-interface -p /software/services/service68/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::207/64,2001:f0d0:1884:200c::208/64"
+litp create -t vm-network-interface -p /software/services/service68/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::209/64,2001:f0d0:1884:200c::20a/64"
+litp create -t vm-network-interface -p /software/services/service68/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::20b/64,2001:f0d0:1884:200c::20c/64"
+litp create -t vm-network-interface -p /software/services/service68/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::20d/64,2001:f0d0:1884:200c::20e/64"
+litp create -t vm-network-interface -p /software/services/service68/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::20f/64,2001:f0d0:1884:200c::210/64"
+
+litp create -t vm-service -p /software/services/service69 -o service_name="service69" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs69 -o name=cs69 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service69 -p /deployments/test/clusters/cluster1/services/cs69/applications/service69
+litp create -t vm-network-interface -p /software/services/service69/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::211/64,2001:f0d0:1884:200c::212/64"
+litp create -t vm-network-interface -p /software/services/service69/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::213/64,2001:f0d0:1884:200c::214/64"
+litp create -t vm-network-interface -p /software/services/service69/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::215/64,2001:f0d0:1884:200c::216/64"
+litp create -t vm-network-interface -p /software/services/service69/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::217/64,2001:f0d0:1884:200c::218/64"
+litp create -t vm-network-interface -p /software/services/service69/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::219/64,2001:f0d0:1884:200c::21a/64"
+litp create -t vm-network-interface -p /software/services/service69/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::21b/64,2001:f0d0:1884:200c::21c/64"
+
+litp create -t vm-service -p /software/services/service70 -o service_name="service70" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs70 -o name=cs70 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service70 -p /deployments/test/clusters/cluster1/services/cs70/applications/service70
+litp create -t vm-network-interface -p /software/services/service70/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::21d/64,2001:f0d0:1884:200c::21e/64"
+litp create -t vm-network-interface -p /software/services/service70/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::21f/64,2001:f0d0:1884:200c::220/64"
+litp create -t vm-network-interface -p /software/services/service70/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::221/64,2001:f0d0:1884:200c::222/64"
+litp create -t vm-network-interface -p /software/services/service70/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::223/64,2001:f0d0:1884:200c::224/64"
+litp create -t vm-network-interface -p /software/services/service70/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::225/64,2001:f0d0:1884:200c::226/64"
+litp create -t vm-network-interface -p /software/services/service70/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::227/64,2001:f0d0:1884:200c::228/64"
+litp create -t vm-network-interface -p /software/services/service70/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::229/64,2001:f0d0:1884:200c::22a/64"
+
+litp create -t vm-service -p /software/services/service71 -o service_name="service71" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs71 -o name=cs71 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service71 -p /deployments/test/clusters/cluster1/services/cs71/applications/service71
+litp create -t vm-network-interface -p /software/services/service71/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::22b/64,2001:f0d0:1884:200c::22c/64"
+litp create -t vm-network-interface -p /software/services/service71/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::22d/64,2001:f0d0:1884:200c::22e/64"
+litp create -t vm-network-interface -p /software/services/service71/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::22f/64,2001:f0d0:1884:200c::230/64"
+litp create -t vm-network-interface -p /software/services/service71/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::231/64,2001:f0d0:1884:200c::232/64"
+litp create -t vm-network-interface -p /software/services/service71/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::233/64,2001:f0d0:1884:200c::234/64"
+litp create -t vm-network-interface -p /software/services/service71/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::235/64,2001:f0d0:1884:200c::236/64"
+litp create -t vm-network-interface -p /software/services/service71/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::237/64,2001:f0d0:1884:200c::238/64"
+litp create -t vm-network-interface -p /software/services/service71/vm_network_interfaces/iface7 -o network_name=mgmt device_name=eth7 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::239/64,2001:f0d0:1884:200c::23a/64"
+
+litp create -t vm-service -p /software/services/service72 -o service_name="service72" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs72 -o name=cs72 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service72 -p /deployments/test/clusters/cluster1/services/cs72/applications/service72
+litp create -t vm-network-interface -p /software/services/service72/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::23b/64,2001:f0d0:1884:200c::23c/64"
+
+litp create -t vm-service -p /software/services/service73 -o service_name="service73" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs73 -o name=cs73 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service73 -p /deployments/test/clusters/cluster1/services/cs73/applications/service73
+litp create -t vm-network-interface -p /software/services/service73/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::23d/64,2001:f0d0:1884:200c::23e/64"
+litp create -t vm-network-interface -p /software/services/service73/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::23f/64,2001:f0d0:1884:200c::240/64"
+
+litp create -t vm-service -p /software/services/service74 -o service_name="service74" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs74 -o name=cs74 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service74 -p /deployments/test/clusters/cluster1/services/cs74/applications/service74
+litp create -t vm-network-interface -p /software/services/service74/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::241/64,2001:f0d0:1884:200c::242/64"
+litp create -t vm-network-interface -p /software/services/service74/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::243/64,2001:f0d0:1884:200c::244/64"
+litp create -t vm-network-interface -p /software/services/service74/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::245/64,2001:f0d0:1884:200c::246/64"
+
+litp create -t vm-service -p /software/services/service75 -o service_name="service75" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs75 -o name=cs75 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service75 -p /deployments/test/clusters/cluster1/services/cs75/applications/service75
+litp create -t vm-network-interface -p /software/services/service75/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::247/64,2001:f0d0:1884:200c::248/64"
+litp create -t vm-network-interface -p /software/services/service75/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::249/64,2001:f0d0:1884:200c::24a/64"
+litp create -t vm-network-interface -p /software/services/service75/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::24b/64,2001:f0d0:1884:200c::24c/64"
+litp create -t vm-network-interface -p /software/services/service75/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::24d/64,2001:f0d0:1884:200c::24e/64"
+
+litp create -t vm-service -p /software/services/service76 -o service_name="service76" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs76 -o name=cs76 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service76 -p /deployments/test/clusters/cluster1/services/cs76/applications/service76
+litp create -t vm-network-interface -p /software/services/service76/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::24f/64,2001:f0d0:1884:200c::250/64"
+litp create -t vm-network-interface -p /software/services/service76/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::251/64,2001:f0d0:1884:200c::252/64"
+litp create -t vm-network-interface -p /software/services/service76/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::253/64,2001:f0d0:1884:200c::254/64"
+litp create -t vm-network-interface -p /software/services/service76/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::255/64,2001:f0d0:1884:200c::256/64"
+litp create -t vm-network-interface -p /software/services/service76/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::257/64,2001:f0d0:1884:200c::258/64"
+
+litp create -t vm-service -p /software/services/service77 -o service_name="service77" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs77 -o name=cs77 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service77 -p /deployments/test/clusters/cluster1/services/cs77/applications/service77
+litp create -t vm-network-interface -p /software/services/service77/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::259/64,2001:f0d0:1884:200c::25a/64"
+litp create -t vm-network-interface -p /software/services/service77/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::25b/64,2001:f0d0:1884:200c::25c/64"
+litp create -t vm-network-interface -p /software/services/service77/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::25d/64,2001:f0d0:1884:200c::25e/64"
+litp create -t vm-network-interface -p /software/services/service77/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::25f/64,2001:f0d0:1884:200c::260/64"
+litp create -t vm-network-interface -p /software/services/service77/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::261/64,2001:f0d0:1884:200c::262/64"
+litp create -t vm-network-interface -p /software/services/service77/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::263/64,2001:f0d0:1884:200c::264/64"
+
+litp create -t vm-service -p /software/services/service78 -o service_name="service78" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs78 -o name=cs78 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service78 -p /deployments/test/clusters/cluster1/services/cs78/applications/service78
+litp create -t vm-network-interface -p /software/services/service78/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::265/64,2001:f0d0:1884:200c::266/64"
+litp create -t vm-network-interface -p /software/services/service78/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::267/64,2001:f0d0:1884:200c::268/64"
+litp create -t vm-network-interface -p /software/services/service78/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::269/64,2001:f0d0:1884:200c::26a/64"
+litp create -t vm-network-interface -p /software/services/service78/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::26b/64,2001:f0d0:1884:200c::26c/64"
+litp create -t vm-network-interface -p /software/services/service78/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::26d/64,2001:f0d0:1884:200c::26e/64"
+litp create -t vm-network-interface -p /software/services/service78/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::26f/64,2001:f0d0:1884:200c::270/64"
+litp create -t vm-network-interface -p /software/services/service78/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::271/64,2001:f0d0:1884:200c::272/64"
+
+litp create -t vm-service -p /software/services/service79 -o service_name="service79" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs79 -o name=cs79 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service79 -p /deployments/test/clusters/cluster1/services/cs79/applications/service79
+litp create -t vm-network-interface -p /software/services/service79/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::273/64,2001:f0d0:1884:200c::274/64"
+litp create -t vm-network-interface -p /software/services/service79/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::275/64,2001:f0d0:1884:200c::276/64"
+litp create -t vm-network-interface -p /software/services/service79/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::277/64,2001:f0d0:1884:200c::278/64"
+litp create -t vm-network-interface -p /software/services/service79/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::279/64,2001:f0d0:1884:200c::27a/64"
+litp create -t vm-network-interface -p /software/services/service79/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::27b/64,2001:f0d0:1884:200c::27c/64"
+litp create -t vm-network-interface -p /software/services/service79/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::27d/64,2001:f0d0:1884:200c::27e/64"
+litp create -t vm-network-interface -p /software/services/service79/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::27f/64,2001:f0d0:1884:200c::280/64"
+litp create -t vm-network-interface -p /software/services/service79/vm_network_interfaces/iface7 -o network_name=mgmt device_name=eth7 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::281/64,2001:f0d0:1884:200c::282/64"
+
+litp create -t vm-service -p /software/services/service80 -o service_name="service80" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs80 -o name=cs80 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service80 -p /deployments/test/clusters/cluster1/services/cs80/applications/service80
+litp create -t vm-network-interface -p /software/services/service80/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::283/64,2001:f0d0:1884:200c::284/64"
+
+litp create -t vm-service -p /software/services/service81 -o service_name="service81" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs81 -o name=cs81 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service81 -p /deployments/test/clusters/cluster1/services/cs81/applications/service81
+litp create -t vm-network-interface -p /software/services/service81/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::285/64,2001:f0d0:1884:200c::286/64"
+litp create -t vm-network-interface -p /software/services/service81/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::287/64,2001:f0d0:1884:200c::288/64"
+
+litp create -t vm-service -p /software/services/service82 -o service_name="service82" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs82 -o name=cs82 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service82 -p /deployments/test/clusters/cluster1/services/cs82/applications/service82
+litp create -t vm-network-interface -p /software/services/service82/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::289/64,2001:f0d0:1884:200c::28a/64"
+litp create -t vm-network-interface -p /software/services/service82/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::28b/64,2001:f0d0:1884:200c::28c/64"
+litp create -t vm-network-interface -p /software/services/service82/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::28d/64,2001:f0d0:1884:200c::28e/64"
+
+litp create -t vm-service -p /software/services/service83 -o service_name="service83" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs83 -o name=cs83 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service83 -p /deployments/test/clusters/cluster1/services/cs83/applications/service83
+litp create -t vm-network-interface -p /software/services/service83/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::28f/64,2001:f0d0:1884:200c::290/64"
+litp create -t vm-network-interface -p /software/services/service83/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::291/64,2001:f0d0:1884:200c::292/64"
+litp create -t vm-network-interface -p /software/services/service83/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::293/64,2001:f0d0:1884:200c::294/64"
+litp create -t vm-network-interface -p /software/services/service83/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::295/64,2001:f0d0:1884:200c::296/64"
+
+litp create -t vm-service -p /software/services/service84 -o service_name="service84" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs84 -o name=cs84 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service84 -p /deployments/test/clusters/cluster1/services/cs84/applications/service84
+litp create -t vm-network-interface -p /software/services/service84/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::297/64,2001:f0d0:1884:200c::298/64"
+litp create -t vm-network-interface -p /software/services/service84/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::299/64,2001:f0d0:1884:200c::29a/64"
+litp create -t vm-network-interface -p /software/services/service84/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::29b/64,2001:f0d0:1884:200c::29c/64"
+litp create -t vm-network-interface -p /software/services/service84/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::29d/64,2001:f0d0:1884:200c::29e/64"
+litp create -t vm-network-interface -p /software/services/service84/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::29f/64,2001:f0d0:1884:200c::2a0/64"
+
+litp create -t vm-service -p /software/services/service85 -o service_name="service85" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs85 -o name=cs85 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service85 -p /deployments/test/clusters/cluster1/services/cs85/applications/service85
+litp create -t vm-network-interface -p /software/services/service85/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2a1/64,2001:f0d0:1884:200c::2a2/64"
+litp create -t vm-network-interface -p /software/services/service85/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2a3/64,2001:f0d0:1884:200c::2a4/64"
+litp create -t vm-network-interface -p /software/services/service85/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2a5/64,2001:f0d0:1884:200c::2a6/64"
+litp create -t vm-network-interface -p /software/services/service85/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2a7/64,2001:f0d0:1884:200c::2a8/64"
+litp create -t vm-network-interface -p /software/services/service85/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2a9/64,2001:f0d0:1884:200c::2aa/64"
+litp create -t vm-network-interface -p /software/services/service85/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2ab/64,2001:f0d0:1884:200c::2ac/64"
+
+litp create -t vm-service -p /software/services/service86 -o service_name="service86" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs86 -o name=cs86 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service86 -p /deployments/test/clusters/cluster1/services/cs86/applications/service86
+litp create -t vm-network-interface -p /software/services/service86/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2ad/64,2001:f0d0:1884:200c::2ae/64"
+litp create -t vm-network-interface -p /software/services/service86/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2af/64,2001:f0d0:1884:200c::2b0/64"
+litp create -t vm-network-interface -p /software/services/service86/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2b1/64,2001:f0d0:1884:200c::2b2/64"
+litp create -t vm-network-interface -p /software/services/service86/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2b3/64,2001:f0d0:1884:200c::2b4/64"
+litp create -t vm-network-interface -p /software/services/service86/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2b5/64,2001:f0d0:1884:200c::2b6/64"
+litp create -t vm-network-interface -p /software/services/service86/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2b7/64,2001:f0d0:1884:200c::2b8/64"
+litp create -t vm-network-interface -p /software/services/service86/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2b9/64,2001:f0d0:1884:200c::2ba/64"
+
+litp create -t vm-service -p /software/services/service87 -o service_name="service87" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs87 -o name=cs87 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service87 -p /deployments/test/clusters/cluster1/services/cs87/applications/service87
+litp create -t vm-network-interface -p /software/services/service87/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2bb/64,2001:f0d0:1884:200c::2bc/64"
+litp create -t vm-network-interface -p /software/services/service87/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2bd/64,2001:f0d0:1884:200c::2be/64"
+litp create -t vm-network-interface -p /software/services/service87/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2bf/64,2001:f0d0:1884:200c::2c0/64"
+litp create -t vm-network-interface -p /software/services/service87/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2c1/64,2001:f0d0:1884:200c::2c2/64"
+litp create -t vm-network-interface -p /software/services/service87/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2c3/64,2001:f0d0:1884:200c::2c4/64"
+litp create -t vm-network-interface -p /software/services/service87/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2c5/64,2001:f0d0:1884:200c::2c6/64"
+litp create -t vm-network-interface -p /software/services/service87/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2c7/64,2001:f0d0:1884:200c::2c8/64"
+litp create -t vm-network-interface -p /software/services/service87/vm_network_interfaces/iface7 -o network_name=mgmt device_name=eth7 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2c9/64,2001:f0d0:1884:200c::2ca/64"
+
+litp create -t vm-service -p /software/services/service88 -o service_name="service88" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs88 -o name=cs88 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service88 -p /deployments/test/clusters/cluster1/services/cs88/applications/service88
+litp create -t vm-network-interface -p /software/services/service88/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2cb/64,2001:f0d0:1884:200c::2cc/64"
+
+litp create -t vm-service -p /software/services/service89 -o service_name="service89" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs89 -o name=cs89 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service89 -p /deployments/test/clusters/cluster1/services/cs89/applications/service89
+litp create -t vm-network-interface -p /software/services/service89/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2cd/64,2001:f0d0:1884:200c::2ce/64"
+litp create -t vm-network-interface -p /software/services/service89/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2cf/64,2001:f0d0:1884:200c::2d0/64"
+
+litp create -t vm-service -p /software/services/service90 -o service_name="service90" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs90 -o name=cs90 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service90 -p /deployments/test/clusters/cluster1/services/cs90/applications/service90
+litp create -t vm-network-interface -p /software/services/service90/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2d1/64,2001:f0d0:1884:200c::2d2/64"
+litp create -t vm-network-interface -p /software/services/service90/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2d3/64,2001:f0d0:1884:200c::2d4/64"
+litp create -t vm-network-interface -p /software/services/service90/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2d5/64,2001:f0d0:1884:200c::2d6/64"
+
+litp create -t vm-service -p /software/services/service91 -o service_name="service91" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs91 -o name=cs91 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service91 -p /deployments/test/clusters/cluster1/services/cs91/applications/service91
+litp create -t vm-network-interface -p /software/services/service91/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2d7/64,2001:f0d0:1884:200c::2d8/64"
+litp create -t vm-network-interface -p /software/services/service91/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2d9/64,2001:f0d0:1884:200c::2da/64"
+litp create -t vm-network-interface -p /software/services/service91/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2db/64,2001:f0d0:1884:200c::2dc/64"
+litp create -t vm-network-interface -p /software/services/service91/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2dd/64,2001:f0d0:1884:200c::2de/64"
+
+litp create -t vm-service -p /software/services/service92 -o service_name="service92" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs92 -o name=cs92 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service92 -p /deployments/test/clusters/cluster1/services/cs92/applications/service92
+litp create -t vm-network-interface -p /software/services/service92/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2df/64,2001:f0d0:1884:200c::2e0/64"
+litp create -t vm-network-interface -p /software/services/service92/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2e1/64,2001:f0d0:1884:200c::2e2/64"
+litp create -t vm-network-interface -p /software/services/service92/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2e3/64,2001:f0d0:1884:200c::2e4/64"
+litp create -t vm-network-interface -p /software/services/service92/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2e5/64,2001:f0d0:1884:200c::2e6/64"
+litp create -t vm-network-interface -p /software/services/service92/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2e7/64,2001:f0d0:1884:200c::2e8/64"
+
+litp create -t vm-service -p /software/services/service93 -o service_name="service93" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs93 -o name=cs93 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service93 -p /deployments/test/clusters/cluster1/services/cs93/applications/service93
+litp create -t vm-network-interface -p /software/services/service93/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2e9/64,2001:f0d0:1884:200c::2ea/64"
+litp create -t vm-network-interface -p /software/services/service93/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2eb/64,2001:f0d0:1884:200c::2ec/64"
+litp create -t vm-network-interface -p /software/services/service93/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2ed/64,2001:f0d0:1884:200c::2ee/64"
+litp create -t vm-network-interface -p /software/services/service93/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2ef/64,2001:f0d0:1884:200c::2f0/64"
+litp create -t vm-network-interface -p /software/services/service93/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2f1/64,2001:f0d0:1884:200c::2f2/64"
+litp create -t vm-network-interface -p /software/services/service93/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2f3/64,2001:f0d0:1884:200c::2f4/64"
+
+litp create -t vm-service -p /software/services/service94 -o service_name="service94" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs94 -o name=cs94 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service94 -p /deployments/test/clusters/cluster1/services/cs94/applications/service94
+litp create -t vm-network-interface -p /software/services/service94/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2f5/64,2001:f0d0:1884:200c::2f6/64"
+litp create -t vm-network-interface -p /software/services/service94/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2f7/64,2001:f0d0:1884:200c::2f8/64"
+litp create -t vm-network-interface -p /software/services/service94/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2f9/64,2001:f0d0:1884:200c::2fa/64"
+litp create -t vm-network-interface -p /software/services/service94/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2fb/64,2001:f0d0:1884:200c::2fc/64"
+litp create -t vm-network-interface -p /software/services/service94/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2fd/64,2001:f0d0:1884:200c::2fe/64"
+litp create -t vm-network-interface -p /software/services/service94/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::2ff/64,2001:f0d0:1884:200c::300/64"
+litp create -t vm-network-interface -p /software/services/service94/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::301/64,2001:f0d0:1884:200c::302/64"
+
+litp create -t vm-service -p /software/services/service95 -o service_name="service95" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs95 -o name=cs95 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service95 -p /deployments/test/clusters/cluster1/services/cs95/applications/service95
+litp create -t vm-network-interface -p /software/services/service95/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::303/64,2001:f0d0:1884:200c::304/64"
+litp create -t vm-network-interface -p /software/services/service95/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::305/64,2001:f0d0:1884:200c::306/64"
+litp create -t vm-network-interface -p /software/services/service95/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::307/64,2001:f0d0:1884:200c::308/64"
+litp create -t vm-network-interface -p /software/services/service95/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::309/64,2001:f0d0:1884:200c::30a/64"
+litp create -t vm-network-interface -p /software/services/service95/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::30b/64,2001:f0d0:1884:200c::30c/64"
+litp create -t vm-network-interface -p /software/services/service95/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::30d/64,2001:f0d0:1884:200c::30e/64"
+litp create -t vm-network-interface -p /software/services/service95/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::30f/64,2001:f0d0:1884:200c::310/64"
+litp create -t vm-network-interface -p /software/services/service95/vm_network_interfaces/iface7 -o network_name=mgmt device_name=eth7 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::311/64,2001:f0d0:1884:200c::312/64"
+
+litp create -t vm-service -p /software/services/service96 -o service_name="service96" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs96 -o name=cs96 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service96 -p /deployments/test/clusters/cluster1/services/cs96/applications/service96
+litp create -t vm-network-interface -p /software/services/service96/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::313/64,2001:f0d0:1884:200c::314/64"
+
+litp create -t vm-service -p /software/services/service97 -o service_name="service97" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs97 -o name=cs97 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service97 -p /deployments/test/clusters/cluster1/services/cs97/applications/service97
+litp create -t vm-network-interface -p /software/services/service97/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::315/64,2001:f0d0:1884:200c::316/64"
+litp create -t vm-network-interface -p /software/services/service97/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::317/64,2001:f0d0:1884:200c::318/64"
+
+litp create -t vm-service -p /software/services/service98 -o service_name="service98" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs98 -o name=cs98 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service98 -p /deployments/test/clusters/cluster1/services/cs98/applications/service98
+litp create -t vm-network-interface -p /software/services/service98/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::319/64,2001:f0d0:1884:200c::31a/64"
+litp create -t vm-network-interface -p /software/services/service98/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::31b/64,2001:f0d0:1884:200c::31c/64"
+litp create -t vm-network-interface -p /software/services/service98/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::31d/64,2001:f0d0:1884:200c::31e/64"
+
+litp create -t vm-service -p /software/services/service99 -o service_name="service99" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs99 -o name=cs99 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service99 -p /deployments/test/clusters/cluster1/services/cs99/applications/service99
+litp create -t vm-network-interface -p /software/services/service99/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::31f/64,2001:f0d0:1884:200c::320/64"
+litp create -t vm-network-interface -p /software/services/service99/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::321/64,2001:f0d0:1884:200c::322/64"
+litp create -t vm-network-interface -p /software/services/service99/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::323/64,2001:f0d0:1884:200c::324/64"
+litp create -t vm-network-interface -p /software/services/service99/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::325/64,2001:f0d0:1884:200c::326/64"
+
+litp create -t vm-service -p /software/services/service100 -o service_name="service100" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs100 -o name=cs100 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service100 -p /deployments/test/clusters/cluster1/services/cs100/applications/service100
+litp create -t vm-network-interface -p /software/services/service100/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::327/64,2001:f0d0:1884:200c::328/64"
+litp create -t vm-network-interface -p /software/services/service100/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::329/64,2001:f0d0:1884:200c::32a/64"
+litp create -t vm-network-interface -p /software/services/service100/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::32b/64,2001:f0d0:1884:200c::32c/64"
+litp create -t vm-network-interface -p /software/services/service100/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::32d/64,2001:f0d0:1884:200c::32e/64"
+litp create -t vm-network-interface -p /software/services/service100/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::32f/64,2001:f0d0:1884:200c::330/64"
+
+litp create -t vm-service -p /software/services/service101 -o service_name="service101" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs101 -o name=cs101 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service101 -p /deployments/test/clusters/cluster1/services/cs101/applications/service101
+litp create -t vm-network-interface -p /software/services/service101/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::331/64,2001:f0d0:1884:200c::332/64"
+litp create -t vm-network-interface -p /software/services/service101/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::333/64,2001:f0d0:1884:200c::334/64"
+litp create -t vm-network-interface -p /software/services/service101/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::335/64,2001:f0d0:1884:200c::336/64"
+litp create -t vm-network-interface -p /software/services/service101/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::337/64,2001:f0d0:1884:200c::338/64"
+litp create -t vm-network-interface -p /software/services/service101/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::339/64,2001:f0d0:1884:200c::33a/64"
+litp create -t vm-network-interface -p /software/services/service101/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::33b/64,2001:f0d0:1884:200c::33c/64"
+
+litp create -t vm-service -p /software/services/service102 -o service_name="service102" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs102 -o name=cs102 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service102 -p /deployments/test/clusters/cluster1/services/cs102/applications/service102
+litp create -t vm-network-interface -p /software/services/service102/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::33d/64,2001:f0d0:1884:200c::33e/64"
+litp create -t vm-network-interface -p /software/services/service102/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::33f/64,2001:f0d0:1884:200c::340/64"
+litp create -t vm-network-interface -p /software/services/service102/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::341/64,2001:f0d0:1884:200c::342/64"
+litp create -t vm-network-interface -p /software/services/service102/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::343/64,2001:f0d0:1884:200c::344/64"
+litp create -t vm-network-interface -p /software/services/service102/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::345/64,2001:f0d0:1884:200c::346/64"
+litp create -t vm-network-interface -p /software/services/service102/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::347/64,2001:f0d0:1884:200c::348/64"
+litp create -t vm-network-interface -p /software/services/service102/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::349/64,2001:f0d0:1884:200c::34a/64"
+
+litp create -t vm-service -p /software/services/service103 -o service_name="service103" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs103 -o name=cs103 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service103 -p /deployments/test/clusters/cluster1/services/cs103/applications/service103
+litp create -t vm-network-interface -p /software/services/service103/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::34b/64,2001:f0d0:1884:200c::34c/64"
+litp create -t vm-network-interface -p /software/services/service103/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::34d/64,2001:f0d0:1884:200c::34e/64"
+litp create -t vm-network-interface -p /software/services/service103/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::34f/64,2001:f0d0:1884:200c::350/64"
+litp create -t vm-network-interface -p /software/services/service103/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::351/64,2001:f0d0:1884:200c::352/64"
+litp create -t vm-network-interface -p /software/services/service103/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::353/64,2001:f0d0:1884:200c::354/64"
+litp create -t vm-network-interface -p /software/services/service103/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::355/64,2001:f0d0:1884:200c::356/64"
+litp create -t vm-network-interface -p /software/services/service103/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::357/64,2001:f0d0:1884:200c::358/64"
+litp create -t vm-network-interface -p /software/services/service103/vm_network_interfaces/iface7 -o network_name=mgmt device_name=eth7 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::359/64,2001:f0d0:1884:200c::35a/64"
+
+litp create -t vm-service -p /software/services/service104 -o service_name="service104" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs104 -o name=cs104 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service104 -p /deployments/test/clusters/cluster1/services/cs104/applications/service104
+litp create -t vm-network-interface -p /software/services/service104/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::35b/64,2001:f0d0:1884:200c::35c/64"
+
+litp create -t vm-service -p /software/services/service105 -o service_name="service105" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs105 -o name=cs105 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service105 -p /deployments/test/clusters/cluster1/services/cs105/applications/service105
+litp create -t vm-network-interface -p /software/services/service105/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::35d/64,2001:f0d0:1884:200c::35e/64"
+litp create -t vm-network-interface -p /software/services/service105/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::35f/64,2001:f0d0:1884:200c::360/64"
+
+litp create -t vm-service -p /software/services/service106 -o service_name="service106" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs106 -o name=cs106 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service106 -p /deployments/test/clusters/cluster1/services/cs106/applications/service106
+litp create -t vm-network-interface -p /software/services/service106/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::361/64,2001:f0d0:1884:200c::362/64"
+litp create -t vm-network-interface -p /software/services/service106/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::363/64,2001:f0d0:1884:200c::364/64"
+litp create -t vm-network-interface -p /software/services/service106/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::365/64,2001:f0d0:1884:200c::366/64"
+
+litp create -t vm-service -p /software/services/service107 -o service_name="service107" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs107 -o name=cs107 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service107 -p /deployments/test/clusters/cluster1/services/cs107/applications/service107
+litp create -t vm-network-interface -p /software/services/service107/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::367/64,2001:f0d0:1884:200c::368/64"
+litp create -t vm-network-interface -p /software/services/service107/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::369/64,2001:f0d0:1884:200c::36a/64"
+litp create -t vm-network-interface -p /software/services/service107/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::36b/64,2001:f0d0:1884:200c::36c/64"
+litp create -t vm-network-interface -p /software/services/service107/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::36d/64,2001:f0d0:1884:200c::36e/64"
+
+litp create -t vm-service -p /software/services/service108 -o service_name="service108" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs108 -o name=cs108 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service108 -p /deployments/test/clusters/cluster1/services/cs108/applications/service108
+litp create -t vm-network-interface -p /software/services/service108/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::36f/64,2001:f0d0:1884:200c::370/64"
+litp create -t vm-network-interface -p /software/services/service108/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::371/64,2001:f0d0:1884:200c::372/64"
+litp create -t vm-network-interface -p /software/services/service108/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::373/64,2001:f0d0:1884:200c::374/64"
+litp create -t vm-network-interface -p /software/services/service108/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::375/64,2001:f0d0:1884:200c::376/64"
+litp create -t vm-network-interface -p /software/services/service108/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::377/64,2001:f0d0:1884:200c::378/64"
+
+litp create -t vm-service -p /software/services/service109 -o service_name="service109" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs109 -o name=cs109 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service109 -p /deployments/test/clusters/cluster1/services/cs109/applications/service109
+litp create -t vm-network-interface -p /software/services/service109/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::379/64,2001:f0d0:1884:200c::37a/64"
+litp create -t vm-network-interface -p /software/services/service109/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::37b/64,2001:f0d0:1884:200c::37c/64"
+litp create -t vm-network-interface -p /software/services/service109/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::37d/64,2001:f0d0:1884:200c::37e/64"
+litp create -t vm-network-interface -p /software/services/service109/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::37f/64,2001:f0d0:1884:200c::380/64"
+litp create -t vm-network-interface -p /software/services/service109/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::381/64,2001:f0d0:1884:200c::382/64"
+litp create -t vm-network-interface -p /software/services/service109/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::383/64,2001:f0d0:1884:200c::384/64"
+
+litp create -t vm-service -p /software/services/service110 -o service_name="service110" image_name="fmmed" internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs110 -o name=cs110 active=2 standby=0 node_list="node_1,node_2"
+litp inherit -s /software/services/service110 -p /deployments/test/clusters/cluster1/services/cs110/applications/service110
+litp create -t vm-network-interface -p /software/services/service110/vm_network_interfaces/iface0 -o network_name=mgmt device_name=eth0 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::385/64,2001:f0d0:1884:200c::386/64"
+litp create -t vm-network-interface -p /software/services/service110/vm_network_interfaces/iface1 -o network_name=mgmt device_name=eth1 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::387/64,2001:f0d0:1884:200c::388/64"
+litp create -t vm-network-interface -p /software/services/service110/vm_network_interfaces/iface2 -o network_name=mgmt device_name=eth2 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::389/64,2001:f0d0:1884:200c::38a/64"
+litp create -t vm-network-interface -p /software/services/service110/vm_network_interfaces/iface3 -o network_name=mgmt device_name=eth3 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::38b/64,2001:f0d0:1884:200c::38c/64"
+litp create -t vm-network-interface -p /software/services/service110/vm_network_interfaces/iface4 -o network_name=mgmt device_name=eth4 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::38d/64,2001:f0d0:1884:200c::38e/64"
+litp create -t vm-network-interface -p /software/services/service110/vm_network_interfaces/iface5 -o network_name=mgmt device_name=eth5 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::38f/64,2001:f0d0:1884:200c::390/64"
+litp create -t vm-network-interface -p /software/services/service110/vm_network_interfaces/iface6 -o network_name=mgmt device_name=eth6 host_device=br0 ipv6addresses="2001:f0d0:1884:200c::391/64,2001:f0d0:1884:200c::392/64"
+
+
+litp create_plan
+

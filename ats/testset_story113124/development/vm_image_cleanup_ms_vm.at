@@ -1,0 +1,20 @@
+runLitpScript ../../common_setup.atlib
+runLitpScript ../../basic_deployment.atlib
+add-plugins ../../yum_query_mock
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /ms/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create_plan
+assertCallbackTask cb_cleanup_vm_images /ms/services/fmmed1 image_whitelist='fmmed-1.0.1.qcow2' hostname='ms1'
+litp run_plan
+
+# Change the image and verify image cleanup task on ms
+litp create -t vm-image -p /software/images/image2 -o name="fmmed2" source_uri="http://ms1/images/fmmed-1.0.2.qcow2"
+litp update -p /ms/services/fmmed1 -o image_name=fmmed2
+litp create_plan
+assertCallbackTask cb_cleanup_vm_images /ms/services/fmmed1 image_whitelist='fmmed-1.0.2.qcow2' hostname='ms1'
+
+# Check that the ms cleanup image task is after the copy image task
+let __ms_cleanup_image_task CallbackTask cb_cleanup_vm_images /ms/services/fmmed1 hostname='ms1'
+let __ms_copy_image_task ConfigTask ms1 libvirt::copy_file ms1imagefmmed1 /ms/services/fmmed1
+assertTaskBeforeTask __ms_copy_image_task __ms_cleanup_image_task

@@ -1,0 +1,13 @@
+runLitpScript ../common_setup.atlib
+runLitpScript ../basic_deployment.atlib
+
+addMockDirectory /var/www/html/images images_only
+
+litp create -t vm-image -p /software/images/img1 -o name="img1" source_uri="http://ms-1/images/img3.qcow2"
+litp create -t vm-service -p /software/services/vm1 -o service_name="vm1" image_name=img1 internal_status_check=off
+
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/vm1 -o name=vm1 active=2 standby=0 node_list=node_1,node_2
+litp inherit -s /software/services/vm1 -p /deployments/test/clusters/cluster1/services/vm1/applications/vm1
+
+assertError --err_message 'md5sum file /var/www/html/images/img3.qcow2.md5 contains non-ascii characters. Please ensure the contents of the file are correct.' --err_vpath /software/images/img1 create_plan
+

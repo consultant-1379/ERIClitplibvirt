@@ -1,0 +1,18 @@
+[Unit]
+Description=A vm-service created by LITP. Please do not edit.
+<% if @puppet_master == 'true' -%>
+Requires=basic.target blk-availability.service libvirtd.service
+After=basic.target blk-availability.service libvirtd.service
+<% end -%>
+
+[Service]
+Type=oneshot
+ExecStart=/opt/ericsson/nms/litp/lib/litpmnlibvirt/litp_libvirt_adaptor.py <%= @instance_name -%> start
+ExecStop=/opt/ericsson/nms/litp/lib/litpmnlibvirt/litp_libvirt_adaptor.py <%= @instance_name -%> stop
+TimeoutSec=0
+RemainAfterExit=true
+
+[Install]
+<% if @puppet_master == 'true' -%>
+WantedBy=multi-user.target
+<% end -%>

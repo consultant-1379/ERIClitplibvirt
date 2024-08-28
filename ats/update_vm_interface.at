@@ -1,0 +1,24 @@
+runLitpScript common_setup.atlib
+runLitpScript basic_deployment.atlib
+
+add-plugins yum_query_mock
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1
+# add a vm-interface. this should trigger a task to generate metadata
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.10.51"
+
+litp create_plan
+
+# ConfigTask created
+assertConfigTask mn1 libvirt::write_file mn1metadatafmmed1 /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1 target_path='/var/lib/libvirt/instances/fmmed1' file_name='meta-data' content="instance-id: fmmed1\nnetwork-interfaces: 'auto eth0\n\n  iface eth0 inet static\n\n  address 10.10.10.51\n\n  network mgmt\n\n  netmask 255.255.255.0\n\n  broadcast 10.10.10.255\n\n  hwaddress 52:54:00:3c:05:0a\n\n  '\n"
+
+litp run_plan
+
+litp update -p /software/services/fmmed1/vm_network_interfaces/net1 -o ipaddresses="10.10.10.52" mac_prefix=52:54:00
+
+litp create_plan
+litp show_plan
+
+assertConfigTask mn1 libvirt::write_file mn1metadatafmmed1 /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1 target_path='/var/lib/libvirt/instances/fmmed1' file_name='meta-data' content="instance-id: fmmed1\nnetwork-interfaces: 'auto eth0\n\n  iface eth0 inet static\n\n  address 10.10.10.52\n\n  network mgmt\n\n  netmask 255.255.255.0\n\n  broadcast 10.10.10.255\n\n  hwaddress 52:54:00:3c:05:0a\n\n  '\n"

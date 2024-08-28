@@ -1,0 +1,6 @@
+runLitpScript ../basic_deployment_with_bridge.atlib
+
+litp update -p /ms/network_interfaces/if0 -o device_name=eth0 macaddress=08:00:27:5B:C1:31 bridge=br0 -d ipaddress network_name
+litp create -p /ms/network_interfaces/if1 -t eth -o device_name=eth1 macaddress=08:00:27:5B:C1:44 bridge=br10
+litp create -p /ms/network_interfaces/br0 -t bridge -o device_name=br0 ipaddress='10.10.10.100' forwarding_delay=4 network_name='mgmt'
+litp create -p /ms/network_interfaces/br10 -t bridge -o device_name=br10 ipaddress='10.10.11.102' forwarding_delay=4 network_name='traffic'

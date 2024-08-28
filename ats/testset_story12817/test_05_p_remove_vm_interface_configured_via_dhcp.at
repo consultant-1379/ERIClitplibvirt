@@ -1,0 +1,40 @@
+#
+# Verify a user is capable of removing a VM network interface that was configured via the DHCP server without errors.
+#
+
+runLitpScript ../basic_deployment_with_bridge.atlib
+
+# Setup bridge and dhcp service
+litp create -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/br12817 -t bridge -o device_name=br12817 network_name=net12817vm
+litp create -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/br12817 -t bridge -o device_name=br12817 network_name=net12817vm
+litp create -t network -p /infrastructure/networking/networks/net12817vm -o name=net12817vm subnet="10.10.12.0/24"
+
+# Step 1 - create a vm-image model item
+litp create -t vm-image -p /software/images/image_12817 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+# Step 2 - create a vm-serfice model item
+litp create -t vm-service -p /software/services/fmmed_12817 -o service_name=fmmed12817 image_name=fmmed cpus=1 ram=128M internal_status_check=on
+
+# Step 3 - create two  vm-network-interface
+litp create -t vm-network-interface -p /software/services/fmmed_12817/vm_network_interfaces/vm_nic_12817_1 -o device_name=eth0 host_device=br12817 network_name=net12817vm
+litp create -t vm-network-interface -p /software/services/fmmed_12817/vm_network_interfaces/vm_nic_12817_2 -o device_name=eth1 host_device=br12817 network_name=net12817vm
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/fmmed_12817 -o name=fmmed12817 active=1 standby=1 node_list="node_1,node_2"
+litp inherit -p /deployments/test/clusters/cluster1/services/fmmed_12817/applications/fmmed_12817 -s /software/services/fmmed_12817 -o internal_status_check=off
+litp update -p /deployments/test/clusters/cluster1/services/fmmed_12817/applications/fmmed_12817/vm_network_interfaces/vm_nic_12817_1 -o ipaddresses="dhcp"
+litp update -p /deployments/test/clusters/cluster1/services/fmmed_12817/applications/fmmed_12817/vm_network_interfaces/vm_nic_12817_2 -o ipaddresses="dhcp"
+
+# Step 4 - create/run plan success
+litp create_plan
+litp run_plan
+assertPlanState successful
+
+# STEPS 5-6 commented out until code is available
+# Step 5 - remove the vm-network-interface
+litp remove -p /software/services/fmmed_12817/vm_network_interfaces/vm_nic_12817_2
+
+# Step 6 - create/run plan success model item no longer exists
+litp create_plan
+litp run_plan
+assertPlanState successful
+assertNone -p /software/services/fmmed_12817/vm_network_interfaces/vm_nic_12817_2
+assertNone -p /deployments/test/clusters/cluster1/services/fmmed_12817/vm_network_interfaces/vm_nic_12817_2

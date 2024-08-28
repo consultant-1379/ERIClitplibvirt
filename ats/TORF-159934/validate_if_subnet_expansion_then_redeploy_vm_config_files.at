@@ -1,0 +1,80 @@
+##############
+# This AT is for development testing
+#
+# Goal: check if changing a network subnet associated with Clustered VM
+#       Services (Failover and Parallel) triggers a redeploy of VM Cloud init
+#       metadata and VM config files
+#
+# Scenario:
+#       Inherited from basic_scenario.atlib
+#
+#       * Target Network: tr-23
+#           IP subnet: 10.1.23.0/24
+#
+#       * Associated VM Services
+#           - Failover: vs-f23
+#               IP: 10.1.23.50
+#           - Parallel: vs-p23
+#               Node2: 10.1.23.100
+#               Node3: 10.1.23.101
+#
+# Actions:
+#       Change tr-23 IP subnet to: 10.1.23.0/23 (expansion)
+#
+
+####
+# Bulding the scenario
+#
+assertNoPlan
+runLitpScript basic_scenario.atlib
+assertPlanState successful
+
+####
+# Actions
+#
+litp update -p /infrastructure/networking/networks/tr_23 -o subnet='10.1.23.0/23'
+litp create_plan
+
+####
+# Pre-run Checks
+#
+
+#
+# ConfigTask for config files
+#
+
+# Failover VM Service
+assertConfigTask node2 libvirt::write_file node2configvs-f23 /deployments/at/clusters/c1/services/vcs_f23/applications/vapp target_path='/var/lib/libvirt/instances/vs-f23' file_name='config.json' content='{"version": "1.0.0", "vm_data": {"interfaces": {"eth0": {"host_device": "br_23", "mac_address": "52:54:00:2f:af:ba"}}, "ram": "128M", "image-checksum": "34d3e5f564534edf3458e8d834567a21", "yum-checksum": [], "zypper-checksum": [], "cpu": "1", "image": "fmmed-1.0.1.qcow2"}, "adaptor_data": {"internal_status_check": {"active": "on", "ip_address": "10.1.23.50"}, "disk_mounts": []}}'
+assertConfigTask node3 libvirt::write_file node3configvs-f23 /deployments/at/clusters/c1/services/vcs_f23/applications/vapp target_path='/var/lib/libvirt/instances/vs-f23' file_name='config.json' content='{"version": "1.0.0", "vm_data": {"interfaces": {"eth0": {"host_device": "br_23", "mac_address": "52:54:00:2f:af:ba"}}, "ram": "128M", "image-checksum": "34d3e5f564534edf3458e8d834567a21", "yum-checksum": [], "zypper-checksum": [], "cpu": "1", "image": "fmmed-1.0.1.qcow2"}, "adaptor_data": {"internal_status_check": {"active": "on", "ip_address": "10.1.23.50"}, "disk_mounts": []}}'
+
+# Parallel VM Service
+assertConfigTask node2 libvirt::write_file node2configvs-p23 /deployments/at/clusters/c1/services/vcs_p23/applications/vapp target_path='/var/lib/libvirt/instances/vs-p23' file_name='config.json' content='{"version": "1.0.0", "vm_data": {"interfaces": {"eth0": {"host_device": "br_23", "mac_address": "52:54:00:94:75:c0"}}, "ram": "128M", "image-checksum": "34d3e5f564534edf3458e8d834567a21", "yum-checksum": [], "zypper-checksum": [], "cpu": "1", "image": "fmmed-1.0.1.qcow2"}, "adaptor_data": {"internal_status_check": {"active": "on", "ip_address": "10.1.23.100"}, "disk_mounts": []}}'
+
+assertConfigTask node3 libvirt::write_file node3configvs-p23 /deployments/at/clusters/c1/services/vcs_p23/applications/vapp target_path='/var/lib/libvirt/instances/vs-p23' file_name='config.json' content='{"version": "1.0.0", "vm_data": {"interfaces": {"eth0": {"host_device": "br_23", "mac_address": "52:54:00:ff:fd:4a"}}, "ram": "128M", "image-checksum": "34d3e5f564534edf3458e8d834567a21", "yum-checksum": [], "zypper-checksum": [], "cpu": "1", "image": "fmmed-1.0.1.qcow2"}, "adaptor_data": {"internal_status_check": {"active": "on", "ip_address": "10.1.23.101"}, "disk_mounts": []}}'
+
+#
+# ConfigTask for cloud init metadata files
+#
+
+# Failover VM Service
+assertConfigTask node2 libvirt::write_file node2metadatavs-f23 /deployments/at/clusters/c1/services/vcs_f23/applications/vapp target_path='/var/lib/libvirt/instances/vs-f23' file_name='meta-data' content="instance-id: vs-f23\nnetwork-interfaces: 'auto eth0\n\n  iface eth0 inet static\n\n  address 10.1.23.50\n\n  network tr_23\n\n  netmask 255.255.254.0\n\n  broadcast 10.1.23.255\n\n  hwaddress 52:54:00:2f:af:ba\n\n  '\n"
+assertConfigTask node3 libvirt::write_file node3metadatavs-f23 /deployments/at/clusters/c1/services/vcs_f23/applications/vapp target_path='/var/lib/libvirt/instances/vs-f23' target_path='/var/lib/libvirt/instances/vs-f23' file_name='meta-data' content="instance-id: vs-f23\nnetwork-interfaces: 'auto eth0\n\n  iface eth0 inet static\n\n  address 10.1.23.50\n\n  network tr_23\n\n  netmask 255.255.254.0\n\n  broadcast 10.1.23.255\n\n  hwaddress 52:54:00:2f:af:ba\n\n  '\n"
+
+# Parallel VM Service
+assertConfigTask node2 libvirt::write_file node2metadatavs-p23 /deployments/at/clusters/c1/services/vcs_p23/applications/vapp target_path='/var/lib/libvirt/instances/vs-p23' file_name='meta-data' content="instance-id: vs-p23\nnetwork-interfaces: 'auto eth0\n\n  iface eth0 inet static\n\n  address 10.1.23.100\n\n  network tr_23\n\n  netmask 255.255.254.0\n\n  broadcast 10.1.23.255\n\n  hwaddress 52:54:00:94:75:c0\n\n  '\n"
+
+assertConfigTask node3 libvirt::write_file node3metadatavs-p23 /deployments/at/clusters/c1/services/vcs_p23/applications/vapp target_path='/var/lib/libvirt/instances/vs-p23' file_name='meta-data' content="instance-id: vs-p23\nnetwork-interfaces: 'auto eth0\n\n  iface eth0 inet static\n\n  address 10.1.23.101\n\n  network tr_23\n\n  netmask 255.255.254.0\n\n  broadcast 10.1.23.255\n\n  hwaddress 52:54:00:ff:fd:4a\n\n  '\n"
+
+#####
+# Run plan
+#
+litp run_plan
+
+#####
+# Post-run Checks
+#
+assertPlanState successful
+
+## vs network
+assertProperty /infrastructure/networking/networks/tr_23 -o subnet='10.1.23.0/23'
+assertState -p /infrastructure/networking/networks/tr_23 Applied

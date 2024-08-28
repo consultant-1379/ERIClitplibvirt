@@ -1,0 +1,15 @@
+runLitpScript common_setup.atlib
+runLitpScript basic_deployment.atlib
+
+# Base items
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1
+
+# Image not exist error
+litp create -t vm-service -p /software/services/fmmed2 -o service_name=fmmed2 image_name=fmmed1 cpus=1 ram=128M
+litp inherit -s /software/services/fmmed2 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed2
+
+assertError --err_message 'Create plan failed: No "vm-image" item found with name fmmed1' create_plan
+
+litp remove -p /software/services/fmmed2

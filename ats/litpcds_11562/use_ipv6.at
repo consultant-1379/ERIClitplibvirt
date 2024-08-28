@@ -1,0 +1,12 @@
+runLitpScript ../common_setup.atlib
+runLitpScript ../basic_deployment.atlib
+addMockDirectory /var/www/html/3pp/  3pp/
+
+litp update -p /ms/network_interfaces/if0 -o ipv6address=fe80::0202:b3ff:fe1e:8329
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://fe80::0202:b3ff:fe1e:8329/images/fmmed-1.0.1.qcow2"
+
+# service 1
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1
+
+assertError --err_type ValidationError --err_message 'Host "fe80::0202:b3ff:fe1e:8329" in the source_uri property does not resolve to an IP specified in the model for the Management Server.' create_plan

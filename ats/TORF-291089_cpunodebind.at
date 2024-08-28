@@ -1,0 +1,80 @@
+# AT to check the config.json is generated correctly when cpunodebind is undefined, defined, updated and deleted on a vm-service item
+
+runLitpScript common_setup.atlib
+runLitpScript basic_deployment_with_bridge.atlib
+
+litp create -t vm-image -p /software/images/image1 -o name=image1 source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/testvm1 -o service_name=testvm1 image_name=image1 cpus=1 ram=128M internal_status_check=off
+litp create -t vm-network-interface -p /software/services/testvm1/vm_network_interfaces/eth0 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.10.1"
+
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/service1 -o name=service1 active=1 standby=0 node_list=node_1
+litp inherit -s /software/services/testvm1 -p /deployments/test/clusters/cluster1/services/service1/applications/testvm1
+
+# Regression. Create a vm-service as normal (unset cpunodebind) and assert the generated config.json is as expected.
+litp create_plan
+assertConfigTask mn1 libvirt::write_file mn1configtestvm1 /deployments/test/clusters/cluster1/services/service1/applications/testvm1 file_name='config.json' \
+ target_path='/var/lib/libvirt/instances/testvm1' \
+ content='{"version": "1.0.0", "vm_data": {"interfaces": {"eth0": {"host_device": "br0", "mac_address": "52:54:00:1c:05:0d"}}, \
+ "ram": "128M", "image-checksum": "34d3e5f564534edf3458e8d834567a21", "yum-checksum": [], "zypper-checksum": [], "cpu": "1", "image": "fmmed-1.0.1.qcow2"}, \
+ "adaptor_data": {"internal_status_check": {"active": "off", "ip_address": ""}, "disk_mounts": []}}'
+litp run_plan
+
+litp remove_plan
+
+litp create -t vm-service -p /software/services/testvm3 -o service_name=testvm3 image_name=image1 cpus=1 ram=128M internal_status_check=off cpunodebind=5
+litp create -t vm-network-interface -p /software/services/testvm3/vm_network_interfaces/eth0 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.10.2"
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/service3 -o name=service3 active=1 standby=0 node_list=node_1
+litp inherit -s /software/services/testvm3 -p /deployments/test/clusters/cluster1/services/service3/applications/testvm3
+litp create_plan
+assertConfigTask mn1 libvirt::write_file mn1configtestvm3 /deployments/test/clusters/cluster1/services/service3/applications/testvm3 file_name='config.json' \
+ target_path='/var/lib/libvirt/instances/testvm3' \
+ content='{"version": "1.0.0", "vm_data": {"interfaces": {"eth0": {"host_device": "br0", "mac_address": "52:54:00:8d:3d:b2"}}, \
+ "ram": "128M", "image-checksum": "34d3e5f564534edf3458e8d834567a21", "yum-checksum": [], "zypper-checksum": [], "cpu": "1", "cpunodebind": "5", "image": "fmmed-1.0.1.qcow2"}, \
+ "adaptor_data": {"internal_status_check": {"active": "off", "ip_address": ""}, "disk_mounts": []}}'
+
+litp run_plan
+
+
+# Update an applied item (that has an unset cpunodebind property) and assert config.json task is as expected.
+litp update -p /software/services/testvm1 -o cpunodebind=99
+litp create_plan
+assertConfigTask mn1 libvirt::write_file mn1configtestvm1 /deployments/test/clusters/cluster1/services/service1/applications/testvm1 file_name='config.json' \
+ target_path='/var/lib/libvirt/instances/testvm1' \
+ content='{"version": "1.0.0", "vm_data": {"interfaces": {"eth0": {"host_device": "br0", "mac_address": "52:54:00:1c:05:0d"}}, \
+ "ram": "128M", "image-checksum": "34d3e5f564534edf3458e8d834567a21", "yum-checksum": [], "zypper-checksum": [], "cpu": "1", "cpunodebind": "99", "image": "fmmed-1.0.1.qcow2"}, \
+ "adaptor_data": {"internal_status_check": {"active": "off", "ip_address": ""}, "disk_mounts": []}}'
+litp run_plan
+
+# Create a plan and assert no tasks are generated as nothing has changed.
+assertError --err_message 'Create plan failed: no tasks were generated' create_plan
+
+# Update an applied item (that has a cpunodebind value set) and change the cpunodebind value, assert the config.json task is as expected.
+litp update -p /software/services/testvm1 -o cpunodebind=8
+litp create_plan
+assertConfigTask mn1 libvirt::write_file mn1configtestvm1 /deployments/test/clusters/cluster1/services/service1/applications/testvm1 file_name='config.json' \
+ target_path='/var/lib/libvirt/instances/testvm1' \
+ content='{"version": "1.0.0", "vm_data": {"interfaces": {"eth0": {"host_device": "br0", "mac_address": "52:54:00:1c:05:0d"}}, \
+ "ram": "128M", "image-checksum": "34d3e5f564534edf3458e8d834567a21", "yum-checksum": [], "zypper-checksum": [], "cpu": "1", "cpunodebind": "8", "image": "fmmed-1.0.1.qcow2"}, \
+ "adaptor_data": {"internal_status_check": {"active": "off", "ip_address": ""}, "disk_mounts": []}}'
+litp run_plan
+
+# Update an applied item (that has a cpunodebind value set) and delete the cpunodebind property, assert the config.json task is as expected.
+litp update -p /software/services/testvm1 -d cpunodebind
+litp create_plan
+assertConfigTask mn1 libvirt::write_file mn1configtestvm1 /deployments/test/clusters/cluster1/services/service1/applications/testvm1 file_name='config.json' \
+ target_path='/var/lib/libvirt/instances/testvm1' \
+ content='{"version": "1.0.0", "vm_data": {"interfaces": {"eth0": {"host_device": "br0", "mac_address": "52:54:00:1c:05:0d"}}, \
+ "ram": "128M", "image-checksum": "34d3e5f564534edf3458e8d834567a21", "yum-checksum": [], "zypper-checksum": [], "cpu": "1", "image": "fmmed-1.0.1.qcow2"}, \
+ "adaptor_data": {"internal_status_check": {"active": "off", "ip_address": ""}, "disk_mounts": []}}'
+litp run_plan
+
+# Create a plan and assert no tasks are generated as nothing has changed.
+assertError --err_message 'Create plan failed: no tasks were generated' create_plan
+
+# Create vm-service with both cpuset and cpunodebind set, expect validation error.
+litp create -t vm-service -p /software/services/testvm2 -o service_name=testvm2 image_name=image1 cpus=1 ram=128M cpuset=0-9 cpunodebind=0
+litp create -t vm-network-interface -p /software/services/testvm2/vm_network_interfaces/eth0 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.10.2"
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/service2 -o name=service2 active=1 standby=0 node_list=node_1
+litp inherit -s /software/services/testvm2 -p /deployments/test/clusters/cluster1/services/service2/applications/testvm2
+assertError --err_message 'The properties "cpuset" and "cpunodebind" are mutually exclusive' \
+ --err_vpath '/deployments/test/clusters/cluster1/services/service2/applications/testvm2' create_plan

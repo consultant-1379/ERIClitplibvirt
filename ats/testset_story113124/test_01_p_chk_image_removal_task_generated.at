@@ -1,0 +1,39 @@
+# AT to verify that as a user I can change my service image and should see a removal task in a plan to remove the old (unused) image
+runLitpScript ../common_setup.atlib
+runLitpScript ../basic_deployment.atlib
+add-plugins ../yum_query_mock
+addMockDirectory /var/www/html/3pp/ 3pp/
+
+litp create -t vm-image -p /software/images/image1 -o name="image1" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-image -p /software/images/image2 -o name="image2" source_uri="http://ms1/images/fmmed-1.0.2.qcow2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=image1 cpus=1 ram=128M internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/testservice -o name="fmmed1" active=2 standby=0 node_list='node_1,node_2'
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/services/testservice/applications/fmmed1
+
+litp create_plan
+litp run_plan
+
+# Assert unused vm image removal tasks are generated
+assertCallbackTask cb_cleanup_vm_images /deployments/test/clusters/cluster1/services/testservice/applications/fmmed1 image_whitelist='fmmed-1.0.1.qcow2' hostname='mn2'
+assertCallbackTask cb_cleanup_vm_images /deployments/test/clusters/cluster1/services/testservice/applications/fmmed1 image_whitelist='fmmed-1.0.1.qcow2' hostname='mn1'
+
+# Assert unused vm image removal tasks are after copy vm image task for each node
+let __node1_cleanup_image_task CallbackTask cb_cleanup_vm_images /deployments/test/clusters/cluster1/services/testservice/applications/fmmed1 hostname='mn1'
+let __node2_cleanup_image_task CallbackTask cb_cleanup_vm_images /deployments/test/clusters/cluster1/services/testservice/applications/fmmed1 hostname='mn2'
+let __node1_copy_image_task ConfigTask mn1 libvirt::copy_file mn1imagefmmed1 /deployments/test/clusters/cluster1/services/testservice/applications/fmmed1
+let __node2_copy_image_task ConfigTask mn2 libvirt::copy_file mn2imagefmmed1 /deployments/test/clusters/cluster1/services/testservice/applications/fmmed1
+assertTaskBeforeTask __node1_copy_image_task __node1_cleanup_image_task
+assertTaskBeforeTask __node2_copy_image_task __node2_cleanup_image_task
+
+# Update the image on the inherited service
+litp update -p /deployments/test/clusters/cluster1/services/testservice/applications/fmmed1 -o image_name="image2"
+
+litp create_plan
+
+# Assert unused vm image removal tasks are generated
+assertCallbackTask cb_cleanup_vm_images /deployments/test/clusters/cluster1/services/testservice/applications/fmmed1 image_whitelist='fmmed-1.0.2.qcow2' hostname='mn2'
+assertCallbackTask cb_cleanup_vm_images /deployments/test/clusters/cluster1/services/testservice/applications/fmmed1 image_whitelist='fmmed-1.0.2.qcow2' hostname='mn1'
+
+# Assert unused vm image removal tasks are after copy vm image task for each node
+assertTaskBeforeTask __node1_copy_image_task __node1_cleanup_image_task
+assertTaskBeforeTask __node2_copy_image_task __node2_cleanup_image_task

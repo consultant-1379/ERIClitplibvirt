@@ -1,0 +1,40 @@
+#
+# Verify when a user attempts the removal of a VM network interface but doesn't update the device_name, LITP reports error.
+#
+
+runLitpScript ../basic_deployment_with_bridge.atlib
+
+# Setup bridge
+litp create -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/nic_12817 -t eth -o device_name=eth1 macaddress=08:00:27:5B:C1:68 bridge=br12817
+litp create -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/nic_12817 -t eth -o device_name=eth1 macaddress=08:00:27:5B:C1:67 bridge=br12817
+litp create -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/br12817 -t bridge -o device_name=br12817 network_name=net12817vm
+litp create -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/br12817 -t bridge -o device_name=br12817 network_name=net12817vm
+litp create -t network -p /infrastructure/networking/networks/net12817vm -o name=net12817vm subnet="10.10.12.0/24"
+
+# Step 1 - create a vm-image model item
+litp create -t vm-image -p /software/images/image_12817 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+# Step 2 - create a vm-serfice model item
+litp create -t vm-service -p /software/services/fmmed_12817 -o service_name=fmmed12817 image_name=fmmed cpus=1 ram=128M internal_status_check=on
+
+# Step 3 - create three vm-network-interface
+litp create -t vm-network-interface -p /software/services/fmmed_12817/vm_network_interfaces/vm_nic_12817_1 -o device_name=eth0 host_device=br0 network_name=mgmt
+litp create -t vm-network-interface -p /software/services/fmmed_12817/vm_network_interfaces/vm_nic_12817_2 -o device_name=eth1 host_device=br12817 network_name=net12817vm
+litp create -t vm-network-interface -p /software/services/fmmed_12817/vm_network_interfaces/vm_nic_12817_3 -o device_name=eth2 host_device=br10 network_name=traffic
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/fmmed_12817 -o name=fmmed12817 active=1 standby=1 node_list="node_1,node_2"
+litp inherit -p /deployments/test/clusters/cluster1/services/fmmed_12817/applications/fmmed_12817 -s /software/services/fmmed_12817
+litp update -p /deployments/test/clusters/cluster1/services/fmmed_12817/applications/fmmed_12817/vm_network_interfaces/vm_nic_12817_1 -o ipaddresses="10.10.10.105" gateway=10.10.10.1
+litp update -p /deployments/test/clusters/cluster1/services/fmmed_12817/applications/fmmed_12817/vm_network_interfaces/vm_nic_12817_2 -o ipaddresses="10.10.12.105"
+litp update -p /deployments/test/clusters/cluster1/services/fmmed_12817/applications/fmmed_12817/vm_network_interfaces/vm_nic_12817_3 -o ipaddresses="10.10.11.105"
+
+# Step 4 - create/run plan success
+litp create_plan
+litp run_plan
+assertPlanState successful
+
+# STEPS 5-6 commented out until code is available
+# Step 5 - remove vm-network-interface without updating to use another physical host device
+litp remove -p /software/services/fmmed_12817/vm_network_interfaces/vm_nic_12817_2
+
+# Step 6 - create plan and expect error
+assertError --err_type "ValidationError" --err_message 'Create plan failed: Property "device_name" of all vm-network-interface items must start from eth0 and be sequentially numbered' create_plan

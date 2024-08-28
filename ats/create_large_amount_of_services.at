@@ -1,0 +1,138 @@
+runLitpScript common_setup.atlib
+# AT to test large amount of created VM services and assorted NICs.
+
+runLitpScript basic_deployment.atlib
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed2 -o service_name=fmmed2 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed3 -o service_name=fmmed3 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed4 -o service_name=fmmed4 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed5 -o service_name=fmmed5 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed6 -o service_name=fmmed6 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed7 -o service_name=fmmed7 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed8 -o service_name=fmmed8 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed9 -o service_name=fmmed9 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed10 -o service_name=fmmed10 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed11 -o service_name=fmmed11 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed12 -o service_name=fmmed12 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed13 -o service_name=fmmed13 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed14 -o service_name=fmmed14 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed15 -o service_name=fmmed15 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed16 -o service_name=fmmed16 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed17 -o service_name=fmmed17 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed18 -o service_name=fmmed18 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed19 -o service_name=fmmed19 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed20 -o service_name=fmmed20 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed21 -o service_name=fmmed21 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed22 -o service_name=fmmed22 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed23 -o service_name=fmmed23 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed24 -o service_name=fmmed24 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed25 -o service_name=fmmed25 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed26 -o service_name=fmmed26 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed27 -o service_name=fmmed27 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed28 -o service_name=fmmed28 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed29 -o service_name=fmmed29 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed30 -o service_name=fmmed30 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed31 -o service_name=fmmed31 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed32 -o service_name=fmmed32 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed33 -o service_name=fmmed33 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed34 -o service_name=fmmed34 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed35 -o service_name=fmmed35 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed36 -o service_name=fmmed36 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed37 -o service_name=fmmed37 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed38 -o service_name=fmmed38 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed39 -o service_name=fmmed39 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed40 -o service_name=fmmed40 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed41 -o service_name=fmmed41 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed42 -o service_name=fmmed42 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed43 -o service_name=fmmed43 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed44 -o service_name=fmmed44 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed45 -o service_name=fmmed45 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed46 -o service_name=fmmed46 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed47 -o service_name=fmmed47 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed48 -o service_name=fmmed48 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed49 -o service_name=fmmed49 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed50 -o service_name=fmmed50 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed51 -o service_name=fmmed51 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed52 -o service_name=fmmed52 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed53 -o service_name=fmmed53 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed54 -o service_name=fmmed54 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed55 -o service_name=fmmed55 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed56 -o service_name=fmmed56 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed57 -o service_name=fmmed57 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed58 -o service_name=fmmed58 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed59 -o service_name=fmmed59 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed60 -o service_name=fmmed60 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed61 -o service_name=fmmed61 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed62 -o service_name=fmmed62 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed63 -o service_name=fmmed63 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed64 -o service_name=fmmed64 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed65 -o service_name=fmmed65 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed66 -o service_name=fmmed66 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed67 -o service_name=fmmed67 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed68 -o service_name=fmmed68 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed69 -o service_name=fmmed69 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed70 -o service_name=fmmed70 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed71 -o service_name=fmmed71 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed72 -o service_name=fmmed72 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed73 -o service_name=fmmed73 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed74 -o service_name=fmmed74 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed75 -o service_name=fmmed75 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed76 -o service_name=fmmed76 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed77 -o service_name=fmmed77 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed78 -o service_name=fmmed78 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed79 -o service_name=fmmed79 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed80 -o service_name=fmmed80 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed81 -o service_name=fmmed81 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed82 -o service_name=fmmed82 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed83 -o service_name=fmmed83 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed84 -o service_name=fmmed84 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed85 -o service_name=fmmed85 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed86 -o service_name=fmmed86 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed87 -o service_name=fmmed87 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed88 -o service_name=fmmed88 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed89 -o service_name=fmmed89 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed90 -o service_name=fmmed90 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed91 -o service_name=fmmed91 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed92 -o service_name=fmmed92 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed93 -o service_name=fmmed93 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed94 -o service_name=fmmed94 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed95 -o service_name=fmmed95 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed96 -o service_name=fmmed96 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed97 -o service_name=fmmed97 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed98 -o service_name=fmmed98 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed99 -o service_name=fmmed99 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-service -p /software/services/fmmed100 -o service_name=fmmed100 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/testservice -o name="fmmed1" active=2 standby=0 node_list='node_1,node_2'
+
+litp create -t vm-alias -p /software/services/fmmed1/vm_aliases/ms -o alias_names=ms address=10.10.11.100
+
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1
+litp inherit -s /software/services/fmmed2 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed2
+litp inherit -s /software/services/fmmed3 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed3
+litp inherit -s /software/services/fmmed4 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed4
+litp inherit -s /software/services/fmmed5 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed5
+litp inherit -s /software/services/fmmed6 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed6
+litp inherit -s /software/services/fmmed7 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed7
+litp inherit -s /software/services/fmmed8 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed8
+litp inherit -s /software/services/fmmed9 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed9
+litp inherit -s /software/services/fmmed10 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed10
+
+#NIC declaration MN1
+litp create -t network-interface -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/nic0
+litp create -t network-interface -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/nic1
+litp create -t network-interface -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/nic2
+litp create -t network-interface -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/nic3
+litp create -t network-interface -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/nic4
+
+#NIC declaration MN2
+litp create -t network-interface -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/nic0
+litp create -t network-interface -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/nic1
+litp create -t network-interface -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/nic2
+litp create -t network-interface -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/nic3
+litp create -t network-interface -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/nic4
+
+litp create_plan

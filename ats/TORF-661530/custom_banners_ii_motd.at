@@ -1,0 +1,13 @@
+runLitpScript ../common_setup.atlib
+runLitpScript ../basic_deployment.atlib
+
+addMockDirectory /opt/ericsson/nms/litp/etc/puppet/modules/litp/files/ ./install/motd/
+
+litp create -t vm-image -p /software/images/image1 -o name="image1" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/service1 -o service_name=service1 image_name=image1 cpus=1 ram=128M
+litp inherit -s /software/services/service1 -p /deployments/test/clusters/cluster1/nodes/node_1/services/service1
+litp create -t vm-network-interface -p /software/services/service1/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.10.51"
+litp create_plan
+assertConfigTask mn1 libvirt::write_file mn1userdataservice1 /deployments/test/clusters/cluster1/nodes/node_1/services/service1 target_path='/var/lib/libvirt/instances/service1' file_name='user-data' content='\#cloud-config\nbootcmd:\n- - cloud-init-per\n  - instance\n  - hostname\n  - sh\n  - -c\n  - hostnamectl set-hostname node-1-service1\nruncmd:\n- if [ -f /etc/init.d/rsyslog ]; then /sbin/service rsyslog restart; elif [ -f /usr/lib/systemd/system/rsyslog.service\n  ]; then /bin/systemctl restart rsyslog.service; elif [ -f /etc/init.d/syslog ];\n  then /sbin/service syslog restart; else exit 1; fi\n- if [ -f /bin/systemctl ]; then /bin/systemctl restart crond; fi\ntimezone: Europe/mock\n"write_files":\n- "content": |\n    THIS IS A CUSTOM MOTD\n  "path": |-\n    /etc/motd\n'
+litp run_plan
+assertError --err_type DoNothingPlanError --err_message 'Create plan failed: no tasks were generated' create_plan

@@ -1,0 +1,58 @@
+#########################################################################################
+# TORF-159934 TC3
+#
+# Test to verify user get an error if he tries to expand a subnet and migrate another
+# while leaving the ip address of the migrated network assigned to the vm_service.
+#########################################################################################
+
+runLitpScript ../common_setup.atlib
+runLitpScript ../basic_deployment.atlib
+
+# Create ovlp network
+litp create -t network -p /infrastructure/networking/networks/ovlp -o name=ovlp subnet=10.10.11.0/24
+litp create -p /ms/network_interfaces/if1 -t eth -o network_name=ovlp ipaddress=10.10.11.100 macaddress=bb:bb:bb:bb:bb:aa device_name=eth1
+litp create -t bridge -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/br1 -o device_name=br1 ipaddress=10.10.11.101 network_name=ovlp
+litp create -t eth -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/if1 -o device_name=eth1 macaddress=bb:bb:bb:bb:bb:bb bridge=br1
+litp create -t bridge -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/br1 -o device_name=br1 ipaddress=10.10.11.102 network_name=ovlp
+litp create -t eth -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/if1 -o device_name=eth1 macaddress=bb:bb:bb:bb:bb:cc bridge=br1
+
+# Create mgmt2 network
+litp create -t network -p /infrastructure/networking/networks/mgmt2 -o name=mgmt2 subnet=10.10.12.0/24
+litp create -p /ms/network_interfaces/if2 -t eth -o network_name=mgmt2 ipaddress=10.10.12.100 macaddress=cc:cc:cc:cc:cc:aa device_name=eth2
+litp create -t bridge -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/br2 -o device_name=br2 ipaddress=10.10.12.101 network_name=mgmt2
+litp create -t eth -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/if2 -o device_name=eth2 macaddress=cc:cc:cc:cc:cc:bb bridge=br2
+litp create -t bridge -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/br2 -o device_name=br2 ipaddress=10.10.12.102 network_name=mgmt2
+litp create -t eth -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/if2 -o device_name=eth2 macaddress=cc:cc:cc:cc:cc:cc bridge=br2
+
+# Create vm_service fmmed1
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/fmmed1 -o name=fmmed1 active=2 standby=0 node_list='node_1,node_2'
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed
+
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/netovlp -o host_device=br1 device_name=eth0 network_name=ovlp
+litp update -p /deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed/vm_network_interfaces/netovlp -o ipaddresses=10.10.11.201,10.10.11.202
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/netmgmt2 -o host_device=br2 device_name=eth1 network_name=mgmt2
+litp update -p /deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed/vm_network_interfaces/netmgmt2 -o ipaddresses=10.10.12.201,10.10.12.202
+
+litp create_plan
+litp run_plan
+
+# Update ovlp network
+litp update -p /infrastructure/networking/networks/ovlp -o subnet=10.10.11.0/23
+
+# Update mgmt2 network
+litp update -p /infrastructure/networking/networks/mgmt2 -o subnet=10.10.13.0/24
+litp update -p /ms/network_interfaces/if2 -o ipaddress=10.10.13.100
+litp update -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/br2 -o ipaddress=10.10.13.101
+litp update -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/br2 -o ipaddress=10.10.13.102
+
+# Failure will occur due to ip of vm_service fmmed1 is not updated to the new subnet address of mgmt2
+
+let __err_plan --err_message 'Create plan failed: IP address "10.10.12.201" not contained in the subnet of network "mgmt2"' --err_type ValidationError  --err_vpath '/deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed/vm_network_interfaces/netmgmt2'
+assertError __err_plan create_plan
+
+litp update -p /deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed/vm_network_interfaces/netmgmt2 -o ipaddresses=10.10.13.201,10.10.12.202
+
+let __err_plan --err_message 'Create plan failed: IP address "10.10.12.202" not contained in the subnet of network "mgmt2"' --err_type ValidationError  --err_vpath '/deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed/vm_network_interfaces/netmgmt2'
+assertError __err_plan create_plan

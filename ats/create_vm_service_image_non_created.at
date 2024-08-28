@@ -1,0 +1,12 @@
+runLitpScript common_setup.atlib
+# Try to create a vm service with a nonexistent image.
+runLitpScript basic_deployment.atlib
+
+# fmmed1
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M
+
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/testservice -o name=fmmed1 active=2 standby=0 node_list='node_1,node_2'
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/services/testservice/applications/fmmed
+
+let __err_image --err_type ValidationError --err_vpath /deployments/test/clusters/cluster1/services/testservice/applications/fmmed --err_message 'Create plan failed: No "vm-image" item found with name fmmed'
+assertError __err_image create_plan

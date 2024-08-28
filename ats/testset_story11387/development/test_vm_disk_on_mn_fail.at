@@ -1,0 +1,23 @@
+#
+# test if application raises error when user tries to attach disk to VM,
+# that is hosted on management node
+#
+runLitpScript ../../basic_deployment.atlib
+
+litp create -p /infrastructure/storage/storage_profiles/profile_1/volume_groups/vg1/file_systems/vm1 -t file-system -o type=ext4 size=8G -o mount_point=/mnt/tmp
+litp inherit -p /ms/storage_profile -s /infrastructure/storage/storage_profiles/profile_1
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+# MS VM service
+litp create -t vm-service -p /ms/services/fmmed2 -o service_name=fmmed2 image_name=fmmed cpus=2 ram=512M internal_status_check="off"
+
+litp create -t vm-service -p /software/services/vmservice -o service_name=vmservice image_name=image cpus=1 ram=256M
+
+litp create -t vm-alias -p /ms/services/fmmed2/vm_aliases/ms -o alias_names=ms address=10.10.11.100
+litp create -t vm-network-interface -p /ms/services/fmmed2/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.10.201"
+litp create -t bridge -p /ms/network_interfaces/br0 -o device_name=br0 network_name=mgmt ipaddress=10.10.11.100
+
+litp create -t vm-disk -p /software/services/vmservice/vm_disks/data -o host_volume_group=vg1 host_file_system=vm1 mount_point=/mnt/data
+
+assertError --err_message 'A vm-disk can only be used by a VM hosted on the management server' create_plan

@@ -1,0 +1,19 @@
+# AT to check the software service doesn't support the vm-disk type.
+runLitpScript ../basic_deployment.atlib
+
+#For the MS
+litp create -p /infrastructure/storage/storage_profiles/profile_1/volume_groups/vg1/file_systems/vm1 -t file-system -o type=ext4 size=8G -o mount_point=/mnt/data1
+litp inherit -p /ms/storage_profile -s /infrastructure/storage/storage_profiles/profile_1
+
+#Define the logical volume and file system
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+litp create -p /software/services/vm_service_1 -t vm-service -o cpus='1' service_name='test-vm-service-1' ram='144M' image_name='fmmed' \
+    cleanup_command='/sbin/service test-vm-service-1 force-stop' image_name='vm-image-1' hostnames='tmo-vm-1' internal_status_check='on'
+litp create -p /software/services/vm_service_1/vm_aliases/db1 -t vm-alias -o alias_names='dbsvc1' address='111.222.1.2'
+litp create -p /software/services/vm_service_1/vm_network_interfaces/net1 -t vm-network-interface -o host_device='br0' network_name='mgmt' device_name='eth0'
+litp create -p /software/services/vm_service_1/vm_network_interfaces/net_dhcp -t vm-network-interface -o host_device='br6' network_name='dhcp_network' device_name='eth1'
+
+litp create -p /software/services/vm_service_1/vm_disks/data -t vm-disk -o host_volume_group=vg1 host_file_system=vm1 mount_point=/mnt/data
+
+assertError --err_type ValidationError --err_message 'Create plan failed: A vm-disk can only be used by a VM hosted on the management server' create_plan

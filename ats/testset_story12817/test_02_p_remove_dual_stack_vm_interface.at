@@ -1,0 +1,31 @@
+#
+# Verify that a user is capable of removing a dual stack vm-network-interface without any errors
+#
+runLitpScript ../basic_deployment_with_bridge.atlib
+
+# Step 1 - create a vm-image model item
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+# Step 2 - create a vm-service model item
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M
+
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/testcs -o name=fmmed1 active=1 standby=1 node_list='node_1,node_2'
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/services/testcs/applications/fmmed1
+
+# Step 3 Create two or more vm-network-interface model items
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/net0 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.10.11"
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth1 host_device=br0 ipaddresses="10.10.10.14" ipv6addresses="2607:f0d0:1002:7516::2/64"
+
+# Step 4
+litp create_plan
+litp run_plan
+assertPlanState successful
+
+# Step 5 Remove dual stack vm-network-interfaces
+litp remove -p /software/services/fmmed1/vm_network_interfaces/net1
+
+# Step 6 
+litp create_plan
+litp run_plan
+assertPlanState successful
+assertNone /software/services/fmmed1/vm_network_interfaces/net1

@@ -1,0 +1,36 @@
+runLitpScript common_setup.atlib
+runLitpScript basic_deployment_with_bridge.atlib
+
+add-plugins yum_query_mock
+
+litp create -p /infrastructure/networking/networks/traffic1 -t network -o name=traffic1 subnet=10.10.20.0/24
+litp create -p /infrastructure/networking/networks/traffic2 -t network -o name=traffic2 subnet=10.10.30.0/24
+
+litp create -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/nic_1 -t eth -o device_name=eth0 macaddress=08:00:27:5B:C1:EF bridge=br1
+litp create -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/br1 -t bridge -o device_name=br1 forwarding_delay=4 network_name='traffic1'
+
+litp create -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/nic_2 -t eth -o device_name=eth1 macaddress=08:00:27:5B:C1:DF bridge=br2
+litp create -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/br2 -t bridge -o device_name=br2 forwarding_delay=4 network_name='traffic2'
+#litp create -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/br2 -t bridge -o device_name=br2 ipaddress='10.10.30.101' forwarding_delay=4 network_name='traffic2'
+
+litp create -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/nic_1 -t eth -o device_name=eth0 macaddress=08:00:27:5B:C1:CF bridge=br1
+litp create -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/br1 -t bridge -o device_name=br1 forwarding_delay=4 network_name='traffic1'
+
+litp create -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/nic_2 -t eth -o device_name=eth1 macaddress=08:00:27:5B:C1:BF bridge=br2
+litp create -p /deployments/test/clusters/cluster1/nodes/node_2/network_interfaces/br2 -t bridge -o device_name=br2 ipaddress='10.10.30.101' forwarding_delay=4 network_name='traffic2'
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs1 -o name="httpd" active=2 standby=0 node_list="node_1,node_2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check=on
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/net1 -o network_name=traffic1 device_name=eth0 host_device=br1 ipaddresses="10.10.20.10,10.10.20.11" gateway="10.10.20.1"
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/net2 -o network_name=traffic2 device_name=eth1 host_device=br2 ipaddresses="10.10.30.10,10.10.30.11" gateway="10.10.30.1"
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/services/cs1/applications/fmmed
+
+assertError --err_message 'No IPv4 address assigned on any host device which is used by the vm-interfaces on node "mn1"' create_plan
+litp update -p /deployments/test/clusters/cluster1/nodes/node_1/network_interfaces/br1 -o ipaddress='10.10.20.101'
+
+assertError --err_message 'Create plan failed: VM service "fmmed1" has more than 1 gateway defined' --err_type ValidationError --err_vpath /deployments/test/clusters/cluster1/services/cs1/applications/fmmed/vm_network_interfaces/net1 create_plan
+assertError --err_message 'Create plan failed: VM service "fmmed1" has more than 1 gateway defined' --err_type ValidationError --err_vpath /deployments/test/clusters/cluster1/services/cs1/applications/fmmed/vm_network_interfaces/net2 create_plan
+
+litp update -p /software/services/fmmed1/vm_network_interfaces/net2 -d gateway
+litp create_plan

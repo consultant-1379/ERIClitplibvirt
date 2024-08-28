@@ -1,0 +1,19 @@
+runLitpScript ../common_setup.atlib
+# Test Case 09.
+
+# Extend, a vcs-clustered-service from single parallel to two
+# nodes parallel without providing extra hostnames.
+
+# Prerequisite - LITP Deployment
+add-plugins ../yum_query_mock
+
+runLitpScript ./basic_deployment_8851.atlib
+
+# 1. Update node list and ip, not the hostnames
+litp update -p /deployments/test/clusters/cluster1/services/fmmed1 -o name=fmmed1 active=3 standby=0 node_list='node_3,node_1,node_2'
+litp update -p /software/services/fmmed1/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.10.51,10.10.10.53,10.10.10.55"
+litp update -p /software/services/fmmed1/vm_network_interfaces/net2 -o network_name=mgmt device_name=eth1 host_device=br0 ipaddresses="10.10.10.52,10.10.10.54,10.10.10.56"
+
+# 2. Validate Errors
+let __hostnames_number --err_type ValidationError --err_vpath /deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed --err_message 'Hostnames list "node1-test" count does not match number of active instances which is "3"'
+assertError __hostnames_number create_plan

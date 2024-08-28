@@ -1,0 +1,25 @@
+#
+# test if validation error raised if duplicate mounts points
+#
+runLitpScript ../../basic_deployment.atlib
+
+litp create -p /infrastructure/storage/storage_profiles/profile_1/volume_groups/vg1/file_systems/vm1 -t file-system -o type=ext4 size=8G -o mount_point=/mnt/data1
+litp create -p /infrastructure/storage/storage_profiles/profile_1/volume_groups/vg1/file_systems/vm1a -t file-system -o type=ext4 size=8G -o mount_point=/mnt/data2
+litp inherit -p /ms/storage_profile -s /infrastructure/storage/storage_profiles/profile_1
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+# MS VM service
+litp create -t vm-service -p /ms/services/fmmed2 -o service_name=fmmed2 image_name=fmmed cpus=2 ram=512M internal_status_check="off"
+
+
+litp create -t vm-disk -p /ms/services/fmmed2/vm_disks/data1 -o host_volume_group=vg1 host_file_system=vm1 mount_point=/mnt/data
+litp create -t vm-ram-mount -p /ms/services/fmmed2/vm_ram_mounts/data2 -o type=tmpfs mount_point=/mnt/data
+
+
+let __error1 --err_type ValidationError --err_message 'The "mount_point" property "/mnt/data/" is already defined. The mount point must be unique within the VM.' --err_vpath /ms/services/fmmed2/vm_disks/data1
+let __error2 --err_type ValidationError --err_message 'The "mount_point" property "/mnt/data/" is already defined. The mount point must be unique within the VM.' --err_vpath /ms/services/fmmed2/vm_ram_mounts/data2
+assertError __error1 __error2 create_plan
+
+
+

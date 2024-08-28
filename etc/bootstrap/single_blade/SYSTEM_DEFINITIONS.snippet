@@ -1,0 +1,8 @@
+litp create -t libvirt-provider -p /infrastructure/system_providers/libvirt1 -o name=ms_vm_provider bridge=br0
+litp create -t libvirt-system -p /infrastructure/system_providers/libvirt1/systems/vm1 -o system_name=NODE1
+litp create -t libvirt-system -p /infrastructure/system_providers/libvirt1/systems/vm2 -o system_name=NODE2
+litp create -t nic -p /infrastructure/system_providers/libvirt1/systems/vm1/network_interfaces/nic_0 -o interface_name=eth0 macaddress=${VM_MAC_START}
+litp create -t disk -p /infrastructure/system_providers/libvirt1/systems/vm1/disks/vm_disk -o size=40400M name='hd0' uuid='ATA_QEMU_HARDDISK_QM00001' bootable='true'
+#
+litp create -t nic -p /infrastructure/system_providers/libvirt1/systems/vm2/network_interfaces/nic_0 -o interface_name=eth0 macaddress=${VM_MAC_END}
+litp create -t disk -p /infrastructure/system_providers/libvirt1/systems/vm2/disks/vm_disk -o size=40400M name='hd0' uuid='ATA_QEMU_HARDDISK_QM00001' bootable='true'

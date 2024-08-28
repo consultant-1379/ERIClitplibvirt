@@ -1,0 +1,2 @@
+#!/bin/bash
+exec /opt/ericsson/nms/litp/lib/litpmnlibvirt/litp_libvirt_adaptor.py ${@}

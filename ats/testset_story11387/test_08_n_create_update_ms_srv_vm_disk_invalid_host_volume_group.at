@@ -1,0 +1,7 @@
+# AT to test the implementation of the additional file systems to allow for the storage of persistent data on the VMs
+runLitpScript deployment_11387.atlib
+
+litp update -p /ms/services/fmmed2/vm_disks/data -o host_volume_group=non-existing host_file_system=vm2 mount_point=/mnt/data1
+
+assertError --err_type ValidationError --err_message 'Create plan failed: The file-system "non-existing/vm2" is undefined for storage profile on management server.' create_plan
+

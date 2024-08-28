@@ -1,0 +1,10 @@
+runLitpScript ../basic_deployment_with_bridges_on_ms.atlib
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /ms/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M
+
+litp create -t vm-network-interface -p /ms/services/fmmed1/vm_network_interfaces/net0 -o network_name=traffic device_name=eth1 host_device=br10 ipaddresses="dhcp"
+litp create -t vm-network-interface -p /ms/services/fmmed1/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.11.10"
+
+let __ip_error --err_vpath /ms/services/fmmed1/vm_network_interfaces/net1 --err_message 'IP address "10.10.11.10" not contained in the subnet of network "mgmt' --err_type ValidationError
+assertError __ip_error create_plan

@@ -1,0 +1,11 @@
+runLitpScript basic_deployment.atlib
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1
+# add a vm-interface. this should trigger a task to generate metadata
+litp create -t vm-network-interface -p /software/services/fmmed1/network_interfaces/net1 -o network_name=data device_name=eth0 host_device=br0
+litp create_plan
+
+# ConfigTask created
+assertConfigTask mn1 libvirt::write_file mn1metadatafmmed1 /deployments/test/clusters/cluster1/nodes/node_1

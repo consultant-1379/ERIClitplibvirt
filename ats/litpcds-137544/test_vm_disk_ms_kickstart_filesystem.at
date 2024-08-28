@@ -1,0 +1,30 @@
+# Test write config task for MS kickstart filesystem used as a vm-disk
+#
+runLitpScript ../basic_deployment.atlib
+
+# Model MS kickstart filesystems
+#litp create -t file-system -p /infrastructure/storage/storage_profiles/profile_1/volume_groups/vg1/file_systems/root -o type=ext4 mount_point=/ size=15G snap_size=100
+litp create -t file-system -p /infrastructure/storage/storage_profiles/profile_1/volume_groups/vg1/file_systems/home -o type=ext4 mount_point=/home size=6G snap_size=100
+litp create -t file-system -p /infrastructure/storage/storage_profiles/profile_1/volume_groups/vg1/file_systems/var_log -o type=ext4 mount_point=/var/log size=20G snap_size=0
+litp create -t file-system -p /infrastructure/storage/storage_profiles/profile_1/volume_groups/vg1/file_systems/varwww -o type=ext4 mount_point=/var/www size=70G snap_size=100
+litp create -t file-system -p /infrastructure/storage/storage_profiles/profile_1/volume_groups/vg1/file_systems/var -o type=ext4 mount_point=/var size=15G snap_size=100
+litp create -t file-system -p /infrastructure/storage/storage_profiles/profile_1/volume_groups/vg1/file_systems/software -o type=ext4 mount_point=/software size=50G snap_size=0
+
+# Create non-KS filesystem
+litp create -p /infrastructure/storage/storage_profiles/profile_1/volume_groups/vg1/file_systems/vm1 -t file-system -o type=ext4 size=8G -o mount_point=/mnt/tmp
+
+litp inherit -p /ms/storage_profile -s /infrastructure/storage/storage_profiles/profile_1
+
+# Create MS VM service
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /ms/services/fmmed2 -o service_name=fmmed2 image_name=fmmed cpus=2 ram=512M internal_status_check="off"
+
+# Use MS Kickstart filesystem as VM disk
+litp create -t vm-disk -p /ms/services/fmmed2/vm_disks/data1 -o host_volume_group=vg1 host_file_system=varwww mount_point=/mnt/data1
+
+# Use Non-MS Kickstart filesystem as VM disk
+litp create -t vm-disk -p /ms/services/fmmed2/vm_disks/data2 -o host_volume_group=vg1 host_file_system=vm1 mount_point=/mnt/data2
+
+litp create_plan
+litp run_plan
+assertConfigTask ms1 libvirt::write_file ms1configfmmed2 /ms/services/fmmed2 target_path='/var/lib/libvirt/instances/fmmed2' file_name='config.json' content='{"version": "1.0.0", "vm_data": {"interfaces": {}, "ram": "512M", "image-checksum": "34d3e5f564534edf3458e8d834567a21", "yum-checksum": [], "zypper-checksum": [], "cpu": "2", "image": "fmmed-1.0.1.qcow2"}, "adaptor_data": {"internal_status_check": {"active": "off", "ip_address": ""}, "disk_mounts": [["/dev/vg_root/lv_var_www", "/mnt/data1"], ["/dev/vg_root/vg1_vm1", "/mnt/data2"]]}}'

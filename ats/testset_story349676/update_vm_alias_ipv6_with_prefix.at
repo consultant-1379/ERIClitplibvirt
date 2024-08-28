@@ -1,0 +1,44 @@
+runLitpScript ../basic_deployment_with_bridge.atlib
+
+#create vm-alias on the MS with an IPv6 address
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /ms/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+litp create -t vm-alias -p /ms/services/fmmed1/vm_aliases/foo-ms-alias -o address=fdde:4d7e:d471:1::835:90:101 alias_names="foo-ms-alias"
+
+#create vm-service on cluster
+litp create -t vm-service -p /software/services/fmmed2 -o service_name=fmmed2 image_name=fmmed cpus=1 ram=128M internal_status_check=on
+litp create -t vm-network-interface -p /software/services/fmmed2/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth0 host_device=br0
+litp create -t vm-network-interface -p /software/services/fmmed2/vm_network_interfaces/net2 -o network_name=traffic device_name=eth1 host_device=br10
+litp create -t clustered-service -p /deployments/test/clusters/cluster1/services/cs1 -o name=cs1 active=2 standby=0 node_list=node_1,node_2
+litp inherit -s /software/services/fmmed2 -p /deployments/test/clusters/cluster1/services/cs1/applications/fmmed2
+litp update -p /deployments/test/clusters/cluster1/services/cs1/applications/fmmed2/vm_network_interfaces/net1 -o ipaddresses="10.10.10.10,10.10.10.11"
+litp update -p /deployments/test/clusters/cluster1/services/cs1/applications/fmmed2/vm_network_interfaces/net2 -o ipaddresses="10.10.11.10,10.10.11.11"
+
+#create vm-alias on cluster with an IPv6 address
+litp create -t vm-alias -p /software/services/fmmed2/vm_aliases/foo-cluster-alias -o address=fdde:4d7e:d471:1::835:90:102 alias_names=foo-cluster-alias
+
+assertState -p /ms/services/fmmed1/vm_aliases/foo-ms-alias Initial
+assertState -p /software/services/fmmed2/vm_aliases/foo-cluster-alias Initial
+
+litp create_plan
+
+litp run_plan
+
+#assert plan was successful and both aliases items are applied.
+assertPlanState successful
+assertState -p /ms/services/fmmed1/vm_aliases/foo-ms-alias Applied
+assertState -p /software/services/fmmed2/vm_aliases/foo-cluster-alias Applied
+
+#update both vm-aliases items to a different IPv6 address that contains a prefix.
+litp update -p /ms/services/fmmed1/vm_aliases/foo-ms-alias -o address=fdde:4d7e:d471:1::835:90:103/128
+litp update -p /software/services/fmmed2/vm_aliases/foo-cluster-alias -o address=fdde:4d7e:d471:1::835:90:104/128
+
+litp create_plan
+
+
+litp run_plan
+#assert plan was successful and both aliases items are applied.
+assertPlanState successful
+assertState -p /ms/services/fmmed1/vm_aliases/foo-ms-alias Applied
+assertState -p /software/services/fmmed2/vm_aliases/foo-cluster-alias Applied
+

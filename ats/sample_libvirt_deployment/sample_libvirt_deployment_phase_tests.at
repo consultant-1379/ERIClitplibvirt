@@ -1,0 +1,15 @@
+runLitpScript ../common_setup.atlib
+
+runLitpScript sample_libvirt_deployment.sh
+
+litp create_plan
+
+#show show_plan
+# assertPlanLength 6
+# assertPhaseLength 0 3
+# assertPhaseLength 1 7
+# assertPhaseLength 2 4
+# assertPhaseLength 3 2
+# assertPhaseLength 4 2
+# assertPhaseLength 5 6
+#methodCall _depinfo

@@ -1,0 +1,20 @@
+runLitpScript ../common_setup.atlib
+# Test Case 08.
+
+# Extend, a vcs-clustered-service from single parallel to two
+# nodes parallel without providing extra pair of IP Addresses.
+
+# Prerequisite - LITP Deployment
+add-plugins ../yum_query_mock
+
+runLitpScript ./basic_deployment_8851.atlib
+
+# 1. Update node list and hostnames, not the ips
+litp update -p /deployments/test/clusters/cluster1/services/fmmed1 -o name=fmmed1 active=3 standby=0 node_list='node_1,node_2,node_3'
+litp update -p /software/services/fmmed1 -o hostnames='node1-test,node2-test,node3-test'
+
+# 2. Validate Errors
+let __ip_number_net1 --err_type ValidationError --err_vpath /deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed/vm_network_interfaces/net1 --err_message 'The IPv4 address list count of "1" does not match the number of active instances which is "3"'
+let __ip_number_net2 --err_type ValidationError --err_vpath /deployments/test/clusters/cluster1/services/fmmed1/applications/fmmed/vm_network_interfaces/net2 --err_message 'The IPv4 address list count of "1" does not match the number of active instances which is "3"'
+
+assertError __ip_number_net1 __ip_number_net2 create_plan

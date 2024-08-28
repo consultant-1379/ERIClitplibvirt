@@ -1,0 +1,15 @@
+# This file includes AT commands that should be run for
+# every AT in this repository.
+
+# Since some of these ATs invoke the Yum API, it is important
+# that we control the configuration data that Yum sees.  We can
+# do that by mocking the /etc/yum.repos.d directory.  We use
+# a dummy value of "-" for the local directory, since we don't
+# want to provide any files; we also use "False" as the overlay
+# argument, so the mock directory hides the real one rather than
+# just overlaying it.  The result is that the Yum API code will
+# see /etc/yum.repos.d as an empty directory, regardless of what
+# is really in it.
+
+addMockDirectory /etc/yum.repos.d - False
+addMockDirectory /var/www/html/images general_images

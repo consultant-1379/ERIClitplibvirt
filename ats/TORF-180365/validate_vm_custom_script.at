@@ -1,0 +1,81 @@
+runLitpScript ../basic_deployment_with_bridge.atlib
+addMockDirectory /var/www/html/vm_scripts/  vm_scripts/
+addMockDirectory /var/www/html/vm_scripts/test  vm_scripts/
+
+# Create vm-image
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+
+#/SOFTWARE
+# Create vm-service
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+
+#Create vm-network-interface
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.10.51"
+
+# Create vm-custom-script
+litp create -t vm-custom-script -p /software/services/fmmed1/vm_custom_script/customscript -o custom_script_names="csfname1.sh"
+
+# Inherit vm-service to clustered-service
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1
+
+#/MS
+# Add bridge to MS
+litp update -p /ms/network_interfaces/if0 -o device_name=eth0 macaddress=08:00:27:5B:C1:31 bridge=br0 -d ipaddress network_name
+litp create -p /ms/network_interfaces/br0 -t bridge -o device_name=br0 ipaddress='10.10.10.100' forwarding_delay=4 network_name='mgmt'
+
+# Create vm-service
+litp create -t vm-service -p /ms/services/msfmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M internal_status_check=off
+
+#Create vm-network-interface
+litp create -t vm-network-interface -p /ms/services/msfmmed1/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.10.52"
+
+# Create vm-custom-script
+litp create -t vm-custom-script -p /ms/services/msfmmed1/vm_custom_script/customscript -o custom_script_names="csfname1.sh"
+
+
+litp create_plan
+litp run_plan
+
+let __err_case_1_cs_exists   --err_type ValidationError --err_message 'custom script "/var/www/html/vm_scripts/csfname1.py" does not exist on the Management Server'
+let __err_case_2_cs_not_dir  --err_type ValidationError --err_message custom script "/var/www/html/vm_scripts/test" is not a regular file
+let __err_case_3_one_cs_per_service  --err_type CardinalityError --err_message "This collection is limited to a maximum of 1 items not marked for removal"
+let __err_case_4_max_cs_per_item  --err_type ValidationError --err_property custom_script_names --err_message Max number of scripts allowed is 5
+
+# Validate custom script exists
+litp update -p /software/services/fmmed1/vm_custom_script/customscript -o custom_script_names="csfname1.py"
+assertError __err_case_1_cs_exists create_plan
+litp restore_model
+
+# Validate custom script is not a directory
+litp update -p /software/services/fmmed1/vm_custom_script/customscript -o custom_script_names="test"
+assertError __err_case_2_cs_not_dir create_plan
+litp restore_model
+
+# Validate max vm-custom-script items per service is one
+litp create -t vm-custom-script -p /software/services/fmmed1/vm_custom_script/customscript2 -o custom_script_names="csfname2.sh"
+assertError __err_case_3_one_cs_per_service create_plan
+litp restore_model
+
+# Validate the maximum number of scripts per item is 5
+assertError __err_case_4_max_cs_per_item update -p /software/services/fmmed1/vm_custom_script/customscript -o custom_script_names="csfname1.sh,csfname2.py,csfname3.py,csfname4.sh,csfname5.py,csfname6.sh"
+litp restore_model
+
+# Repeat the cases above but on the /ms path
+# Validate custom script exists
+litp update -p /ms/services/msfmmed1/vm_custom_script/customscript -o custom_script_names="csfname1.py"
+assertError __err_case_1_cs_exists create_plan
+litp restore_model
+
+# Validate custom script is not a directory
+litp update -p /ms/services/msfmmed1/vm_custom_script/customscript -o custom_script_names="test"
+assertError __err_case_2_cs_not_dir create_plan
+litp restore_model
+
+# Validate max vm-custom-script items per service is one
+litp create -t vm-custom-script -p /ms/services/msfmmed1/vm_custom_script/customscript2 -o custom_script_names="csfname2.sh"
+assertError __err_case_3_one_cs_per_service create_plan
+litp restore_model
+
+# Validate the maximum number of scripts per item is 5
+assertError __err_case_4_max_cs_per_item update -p /ms/services/msfmmed1/vm_custom_script/customscript -o custom_script_names="csfname1.sh,csfname2.py,csfname3.py,csfname4.sh,csfname5.py,csfname6.sh"
+

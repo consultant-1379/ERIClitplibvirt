@@ -1,0 +1,25 @@
+runLitpScript ../common_setup.atlib
+runLitpScript ../basic_deployment.atlib
+
+add-plugins ../yum_query_mock
+
+litp create -t vm-image -p /software/images/image1 -o name="fmmed" source_uri="http://ms1/images/fmmed-1.0.1.qcow2"
+litp create -t vm-service -p /software/services/fmmed1 -o service_name=fmmed1 image_name=fmmed cpus=1 ram=128M
+litp inherit -s /software/services/fmmed1 -p /deployments/test/clusters/cluster1/nodes/node_1/services/fmmed1
+litp create -t vm-network-interface -p /software/services/fmmed1/vm_network_interfaces/net1 -o network_name=mgmt device_name=eth0 host_device=br0 ipaddresses="10.10.10.51"
+
+litp create -t vm-firewall-rule -p /software/services/fmmed1/vm_firewall_rules/rule1 -o name="123 firstname" provider=iptables action=accept
+
+litp create -t vm-firewall-rule -p /software/services/fmmed1/vm_firewall_rules/rule2 -o name="123 secondname" provider=iptables action=accept
+
+assertError --err_type "ValidationError" --err_message "Rule number must be unique. '123' is already in use." create_plan
+
+litp remove -p /software/services/fmmed1/vm_firewall_rules/rule1
+
+litp remove -p /software/services/fmmed1/vm_firewall_rules/rule2
+
+litp create -t vm-firewall-rule -p /software/services/fmmed1/vm_firewall_rules/rule3 -o name="456 firstname ipv6" provider=ip6tables action=accept
+
+litp create -t vm-firewall-rule -p /software/services/fmmed1/vm_firewall_rules/rule4 -o name="456 secondname ipv6" provider=ip6tables action=accept
+
+assertError --err_type "ValidationError" --err_message "Rule number must be unique. '456' is already in use." create_plan
